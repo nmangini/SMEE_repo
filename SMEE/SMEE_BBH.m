@@ -1,4 +1,4 @@
-function betas=SMEE_BBH(run_name, noiseType, model, catalogue, wv, seed, detno,numPCs,doPlot,typeofscaling, scaling, doDistance, doTimeshift)
+function SMEE_BBH(run_name, noiseType, model, catalogue, wv, lowfreq, seed, detno,numPCs,doPlot,typeofscaling, scaling, doDistance, doTimeshift)
 %nested sampling code with coherent analysis of multiple detectors,
 %coloured noise, and the possibility of a time shift between the location
 %of signal in the data and the reconstruction of it
@@ -35,6 +35,7 @@ function betas=SMEE_BBH(run_name, noiseType, model, catalogue, wv, seed, detno,n
 %               = 1...13 for Q
 %               = 1...15 for HR
 %               = 1...20  for RO3
+%           lowfreq -- frequency cut off
 %           seed -- random seed used to control noise generation etc.
 %           typeofscaling -- type of scaling to be applied to waveform 
 %               = 'SNR'  for SNR scaling
@@ -98,7 +99,7 @@ reset(RandStream.getDefaultStream,seed);
 warning('off','MATLAB:RandStream:GetDefaultStream')
 tic
 
-clearvars -except run_name catalogue wv model seed typeofscaling scaling ...
+clearvars -except run_name catalogue wv model seed lowfreq typeofscaling scaling ...
     detno numPCs doTimeshift doDistance doPlot noise_curve
 
 evnoise = zeros(detno,1);
@@ -120,10 +121,10 @@ fs = 16384;
 sample_deltaT = 1/fs;
 
 % load the catalogues you want to compare
-load(sprintf('/Users/Nick/LIGO/Glasgow_2013/Project/SMEE_BBH/final-MDC_%s-series',catalogue))
+load(sprintf('/data/nmangini/SMEE_BBH/SMEE/final-MDC_%s-series',catalogue))
 
 % load the set of eigenvectors for each catalogue
-load(sprintf('/Users/Nick/LIGO/Glasgow_2013/Project/SMEE_BBH/finalRvectorsPC_%s-series',model));
+load(sprintf('/data/nmangini/SMEE_BBH/SMEE/finalRvectorsPC_%s-series',model));
 
 % sets up the priors and initial chain values, will need to adjust these to
 % include other catalogues. Can use findbetas.m to find max and mins.
@@ -231,7 +232,7 @@ end
 
 
 % set the number of active points in the Nested Sampling
-numactive = 500;
+numactive = 3000;
 
 % set the number of iterations in the MCMC for finding the next active
 % point
@@ -239,6 +240,9 @@ nits = 50;
 
 % This loads the waveform indicated in the input
 wave=MDC_final(:,wv);
+
+% XXX: HACK XXX
+%wave=wave.*hann(length(wave));
 
 % Sky position
 % theta= pi/2;
@@ -289,7 +293,7 @@ for i=1:detno
 %     length(wave)
     
     if ~isempty(find(strcmpi(typeofscaling,{'SNR'})))
-    SNR=computeSNR_colourednoise(wave, sigma);
+    SNR=computeSNR_colourednoise(wave, sigma, lowfreq);
     scale_factor = scaling/SNR;
     wave0 = scale_factor*wave;
     effective_distance = 10/scale_factor;
@@ -305,9 +309,21 @@ for i=1:detno
     scale_factor = 1;
     end
     %wave(:,i) = wave0;
+    
+    % Matrix of frequencies
+    NFFT = length(wave0);
+
+    if iseven(NFFT);
+    f = fs/2*linspace(0,1,NFFT/2+1);
+    else
+    f = fs/2*linspace(0,1,NFFT/2);
+    end
+    
+    % Find index of frequency cut off
+    lowfreq_index = find(round(f)==lowfreq,1);
 
     %function to compute SNR of the waveform
-    SNR=computeSNR_colourednoise(wave0, sigma);
+    SNR=computeSNR_colourednoise(wave0, sigma, lowfreq);
     fprintf(1, 'Detector %i: SNR = %f\n', i, SNR);
     
     % inject waveform into two streams of gaussian noise and compute FFT
@@ -320,7 +336,7 @@ for i=1:detno
     
     % calculates the log of the evidence for noise only
    %evnoise(i) = -2*(sample_deltaT/len)*sum((abs((wave_ft(:,i))).^2)./(abs((sigma)).^2));
-    evnoise(i) = -2*deltaF*sum((abs(wave_ft(30:end,i)).^2)./((sigma(30:end))));
+    evnoise(i) = -2*deltaF*sum((abs(wave_ft(lowfreq_index:end,i)).^2)./((sigma(lowfreq_index:end))));
     fprintf(1, 'Detector %i: log(Noise evidence) = %f\n', i, evnoise(i));
    
     %BEGIN save plots for testing purposes (to check against the Shoemaker aLIGO noise curve)
@@ -345,7 +361,7 @@ end
 
 
 
-V=PCs_final * 1e-22;% * scale_factor;
+V=PCs_final * 1e-15;% * scale_factor;
 
 %PCs in fourier domain
 V_ft_full = fft(V)*sample_deltaT;
@@ -402,6 +418,7 @@ activeT = rand(1,numactive)*(maxT-minT) + minT;
 % calculate the likelihood*prior at these current active points
 likeactive = zeros(1,numactive) + sum(betaprior(1:numPCs)) ...
     + Tprior + dprior;
+
 %coherent case: L is product over individual detector likelihoods
 for j=1:numactive
     for i=1:detno
@@ -431,6 +448,7 @@ if(doPlot)
 end
 
 while j-2 <= numactive * infosafe * H(j-1)
+    %disp(sprintf('j-2: %.2f | stop: %.2f', j-2, numactive * infosafe * H(j-1)))
     if(doPlot)
         activebeta_avg = mean(activebeta);
         activeD_avg = mean(actived);
@@ -445,9 +463,13 @@ while j-2 <= numactive * infosafe * H(j-1)
        % subplot(1,3,1),plot((-100:100),wave0(4000:4200),(-100:100),y(4000:4200))
     
       %same, in frequency domain, plus signal received by detector    
-        subplot(1,2,1),plot((50:4000),abs(wave_ft(50:4000,1)),...
-            (50:4000),abs(y_sig_fft(50:4000)),...
-            (50:4000),abs(y_fft(50:4000)));
+%         subplot(1,2,1),plot((50:4000),abs(wave_ft(50:4000,1)),...
+%             (50:4000),abs(y_sig_fft(50:4000)),...
+%             (50:4000),abs(y_fft(50:4000)));
+         h = subplot(1,2,1);
+            plot(wave0,'r');
+%             hold on
+            plot(y)
     
             min1 = min(activebeta(:,1));
             max1 = max(activebeta(:,1));
@@ -464,6 +486,7 @@ while j-2 <= numactive * infosafe * H(j-1)
             subplot(1,2,2),text(max1,max2,max3,['Iterations: ' num2str(j-2)]);
             
         drawnow;
+%         Movie(j) = getframe(h);
     end
     
     % find minimum of likelihoods
@@ -596,6 +619,9 @@ while j-2 <= numactive * infosafe * H(j-1)
     j=j+1;
 end
 
+% Save movie frames
+% save('MovieFrames','Movie')
+
 % we're no longer reducing the prior distribution, so weights stay the same
 % as (1/N)*X_j
 logwend = logw(j-1) -logw(1) - log(numactive);
@@ -619,15 +645,26 @@ Z_end= Z(j-1+numactive);
 Bayes=Z(j-1+numactive)-sum(evnoise);
 distance= Distance(1:j-2+numactive);
 
+% calculates the posterior distribution on the beta distributions
+rnums = rand(1,length(Lw));
+
+wt = logw(1:length(Lw)) + Lw;
+maxwt = max(wt);
+idx = find(wt' > maxwt+log(rnums));
+
+postbetas = betas(idx,:);
+postT= Ts(idx,:);
+postdis= distance(idx,:);
+
 HOME = getenv('SMEE_HOME');
-resultsdir=sprintf('/Users/Nick/LIGO/Glasgow_2013/Project/SMEE_BBH/Results/equal_length/%s/',run_name);
+resultsdir=sprintf('/data/nmangini/SMEE_BBH/SMEE/Results/%s/',run_name);
 posterior_params_savefile = ['smee_output_' catalogue num2str(wv) '_model' model '_PCs' num2str(numPCs)...
     '_detno' num2str(detno) '_' typeofscaling strrep(num2str(scaling), '.', 'p') '_seed' num2str(seed)];
-save([resultsdir posterior_params_savefile],'catalogue','wv','model','betas','detno',...
-    'Ts','seed','distance','Lw', 'evnoise','Z_end','Bayes','SNR','effective_distance', 'numPCs');
+save([resultsdir posterior_params_savefile],'catalogue','wv','model','betas','activebeta','detno',...
+    'Ts','seed','distance','Lw', 'evnoise','Z_end','Bayes','SNR','postbetas','postT','postdis','effective_distance', 'numPCs');
 
 % save a simple txt file with a line of output
-outFile = sprintf('%s/smee_results_%iPCs_SNR%d.txt', resultsdir,numPCs,scaling);
+outFile = sprintf('%s/smee_results_%iPCs.txt', resultsdir,numPCs);
 fid = fopen(outFile, 'a');
 fprintf(fid, '%i %1.4e %1.4e %1.4e %i \n', wv, evnoise, Bayes, SNR, numPCs);
 fclose(fid);
@@ -645,10 +682,13 @@ end
 fprintf(1,'<T> = %f\n',mean(activeT));
 fprintf(1,'<D> = %f\n',mean(actived));
 
-betas=activebeta;
+% Save betas from nested sampling
+%BETAS=activebeta;
+%betas_savefile = ['betas_model' model wv '-cat' catalogue '-seed' seed];
+%save([resultsdir betas_savefile],'BETAS');
 
-%clear H Lcur betas Lmin Lnew Lrat acc activebeta betachain cholmat betanew V fs...
- %   gasvals good idx infosafe likeactive logWt logdbeta Lw logwend logw maxwt...
-  %  mlog2 newvals randval rnums wt Z lp l j k Activebeta ActiveT activeT Ts Tchain Tnew model
+clear H Lcur betas Lmin Lnew Lrat acc activebeta betachain cholmat betanew V fs...
+    gasvals good idx infosafe likeactive logWt logdbeta Lw logwend logw maxwt...
+    mlog2 newvals randval rnums wt Z lp l j k Activebeta ActiveT activeT Ts Tchain Tnew model
 toc
 %exit
