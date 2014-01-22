@@ -7,27 +7,30 @@
 % output files to see how well the code performed
 
 % NOTE: SMEE is hard coded to run with a specific directory setup:
-    % /data/nmangini/SMEE_BBH/
-    % /data/nmangini/SMEE_BBH/SMEE/
-    % /data/nmangini/SMEE_BBH/SMEE/Results
-    % /data/nmangini/SMEE_BBH/PCA/
-    % /data/nmangini/SMEE_BBH/PCA/Q-series
-    % /data/nmangini/SMEE_BBH/Waveforms/Q-series
-    
+    % ~/SMEE_BBH/
+    % ~/SMEE_BBH/SMEE/
+    % ~/SMEE_BBH/SMEE/Results
+    % ~/SMEE_BBH/PCA/
+    % ~/SMEE_BBH/PCA/Q-series
+    % ~/SMEE_BBH/Waveforms/Q-series
+   
+addpath(genpath('~/SMEE_repo'))
+
 % Creating the principle components:
     % See these scripts's comments for explanation of all steps
-    cd /data/nmangini/SMEE_repo/PCA/Q-series/Q_allmodes
+    cd /home/nmangini/SMEE_repo/PCA/Q-series/Q_allmodes
+    load_frame('Q')
     Q_allmodes_loadmatrix % CHANGE PATH NAMES
     Q_allmodes_pca
-    Q_allmodes_match % optional
+%    Q_allmodes_match % optional
     resampleQ
     
 % Post-processing:
     load_frame
-    copyfile('finalRvectorsPC_Q-series.mat','/data/nmangini/SMEE_repo/SMEE/')
+    copyfile('finalRvectorsPC_Q-series.mat','~/SMEE_repo/SMEE/')
     align_MDCs
-    copyfile('final-MDC_Q-series.mat','/data/nmangini/SMEE_repo/SMEE/')
-    cd /data/nmangini/SMEE_repo/SMEE/    
+    copyfile('final-MDC_Q-series.mat','~/SMEE_repo/SMEE/')
+    cd /home/nmangini/SMEE_repo/SMEE/    
 
 % Running SMEE:    
     SMEE_BBH('EXAMPLE-Q1-Q-seed13-snr10-pcs8','aligo','Q','Q',1,10,13,1,8,0,'SNR',10); % CHANGE PATH NAMES

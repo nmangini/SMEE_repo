@@ -48,38 +48,38 @@ for i = 1:size(injections,2)
 end
 
 % Plotting
-figure(1)
-plot(t,RvectorsPC(:,1))
-grid on
-yL = get(gca,'YLim');
-line([t(peakindex) t(peakindex)],yL,'Color','r')
-line([t(1) t(1)], yL,'Color','g')
-line([t(length(RvectorsPC)) t(length(RvectorsPC))],yL,'Color','y')
-title('1st PC, resmapled')
-xlabel('t (s)')
-ylabel('Strain')
+%figure(1)
+%plot(t,RvectorsPC(:,1))
+%grid on
+%yL = get(gca,'YLim');
+%line([t(peakindex) t(peakindex)],yL,'Color','r')
+%line([t(1) t(1)], yL,'Color','g')
+%line([t(length(RvectorsPC)) t(length(RvectorsPC))],yL,'Color','y')
+%title('1st PC, resmapled')
+%xlabel('t (s)')
+%ylabel('Strain')
 
-figure(2)
-plot(ts,injections(:,1))
-grid on
-yL = get(gca,'YLim');
-line([ts(MDCpeakindex) ts(MDCpeakindex)], yL,'Color','r')
-line([ts(MDCpeakindex)-ts(startindex) ts(MDCpeakindex)-ts(startindex)], yL,'Color','g')
-line([ts(MDCpeakindex)+ts(endindex) ts(MDCpeakindex)+ts(endindex)],yL,'Color','y')
-title('Originial MDC Injection')
-xlabel('t (s)')
-ylabel('Strain')
+%figure(2)
+%plot(ts,injections(:,1))
+%grid on
+%yL = get(gca,'YLim');
+%line([ts(MDCpeakindex) ts(MDCpeakindex)], yL,'Color','r')
+%line([ts(MDCpeakindex)-ts(startindex) ts(MDCpeakindex)-ts(startindex)], yL,'Color','g')
+%line([ts(MDCpeakindex)+ts(endindex) ts(MDCpeakindex)+ts(endindex)],yL,'Color','y')
+%title('Originial MDC Injection')
+%xlabel('t (s)')
+%ylabel('Strain')
 
-figure(3)
-plot(t,MDCinj(:,1))
-title('Adjusted MDC Injection')
-grid on
-yL = get(gca,'YLim');
-line([t(peakindex) t(peakindex)],yL,'Color','r')
-line([t(1) t(1)], yL,'Color','g')
-line([t(length(RvectorsPC)) t(length(RvectorsPC))],yL,'Color','y')
-xlabel('t (s)')
-ylabel('Strain')
+%figure(3)
+%plot(t,MDCinj(:,1))
+%title('Adjusted MDC Injection')
+%grid on
+%yL = get(gca,'YLim');
+%line([t(peakindex) t(peakindex)],yL,'Color','r')
+%line([t(1) t(1)], yL,'Color','g')
+%line([t(length(RvectorsPC)) t(length(RvectorsPC))],yL,'Color','y')
+%xlabel('t (s)')
+%ylabel('Strain')
 
 % Save files
 PC_savefile = 'RvectorsPC_Q-series';

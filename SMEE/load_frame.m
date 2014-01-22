@@ -4,7 +4,7 @@ function load_frame(catalogue)
 warning('off','frgetvect:info')
 
 tic
-% catalogue = 'Q';
+catalogue = 'Q';
 
 if strcmp('Q',catalogue) == 1
     L_catalogue = 13;

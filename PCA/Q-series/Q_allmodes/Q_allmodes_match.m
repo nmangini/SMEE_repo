@@ -14,13 +14,13 @@ for k = 1:13
 end
 
 % Plots
-plot(1:13,minQmatchfull,'bo--')
-xlabel('Number of PCs')
-ylabel('Minimum Match')
-title('Minimum Match vs. Number of PCs, Q-series')
-axis([1 13 0 1])
-grid on
+%plot(1:13,minQmatchfull,'bo--')
+%xlabel('Number of PCs')
+%ylabel('Minimum Match')
+%title('Minimum Match vs. Number of PCs, Q-series')
+%axis([1 13 0 1])
+%grid on
 
 % Clean up work space
-clearvars -except QrawT QrawWF QT QfullWF qvalue QvectorsPC QreconstructedfullWF...
-    Qbeta minbeta maxbeta minQmatchfull norm_QreconstructedfullWF
+%clearvars -except QrawT QrawWF QT QfullWF qvalue QvectorsPC QreconstructedfullWF...
+%    Qbeta minbeta maxbeta minQmatchfull norm_QreconstructedfullWF

@@ -61,26 +61,26 @@ end
 fprintf('done\n')
 
 % Plots
-figure(1);
-for i = 1:3
-    subplot(3,1,i)
-    plot(QT,vectorsPC(:,i))
-    grid on
-    xlabel('t (s)')
-    ylabel('Strain')
-    grid on
-end
-suptitle('First 3 (normalized) Principal Components');
+%figure(1);
+%for i = 1:3
+%    subplot(3,1,i)
+%    plot(QT,vectorsPC(:,i))
+%    grid on
+%    xlabel('t (s)')
+%    ylabel('Strain')
+%    grid on
+%end
+%suptitle('First 3 (normalized) Principal Components');
 
-figure(2);
-for i = 1:3
-    subplot(3,1,i)
-    plot(qvalue,Qbeta(i,:),'x-')
-    xlabel('q')
-    ylabel(strcat({'\beta '},num2str(i)))
-    grid on
-end
-suptitle('Q-series \beta s')
+%figure(2);
+%for i = 1:3
+%    subplot(3,1,i)
+%    plot(qvalue,Qbeta(i,:),'x-')
+%    xlabel('q')
+%    ylabel(strcat({'\beta '},num2str(i)))
+%    grid on
+%end
+%suptitle('Q-series \beta s')
 
 % Save
 evector_savefile = 'vectors_Q-series';
@@ -89,7 +89,7 @@ betas_savefile = 'betas_Q-series';
 save(betas_savefile,'Qbeta', 'maxbeta', 'minbeta');
 
 % Clean up work space
-clearvars -except QrawT QrawWF QT QfullWF qvalue vectorsPC QreconstructedfullWF Qbeta minbeta maxbeta M
+%clearvars -except QrawT QrawWF QT QfullWF qvalue vectorsPC QreconstructedfullWF Qbeta minbeta maxbeta M
 toc
 
 % Next use Q_allmodes_match.m to calculate the match

@@ -4,14 +4,14 @@ function load_frame(catalogue)
 warning('off','frgetvect:info')
 
 tic
-% catalogue = 'Q';
+catalogue = 'Q';
 
 if strcmp('Q',catalogue) == 1
     L_catalogue = 13;
     injections = zeros(49152,L_catalogue);
     qvalues = [1; 115; 130; 145; 150; 160; 175; 190; 2; 205; 220; 235; 250];
     for i = 1:L_catalogue
-    fname = strcat('/Users/Nick/LIGO/Glasgow_2013/Waveforms/MDCframes/',catalogue,...
+    fname = strcat('/home/nmangini/SMEE_repo/Waveforms/MDCframes/',catalogue,...
         '-series/GHLTV-',catalogue,'-series_q',num2str(qvalues(i)),'-900000005-105.gwf');
     [injections(:,i),ts] = frgetvect(fname,'H1:STRAIN',900000013,3);
     end
