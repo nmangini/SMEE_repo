@@ -5,6 +5,7 @@
 %*  http://en.wikipedia.org/wiki/Spin-weighted_spherical_harmonics#Calculating 
 %*  for the equation and a Mathematica notebook containing this expression.
 %*  Works with th,ph as meshes
+%
 function number=calcSWSH( ss, ll, mm, th, ph )
 
     all_coeff = (-1)^(mm) * sqrt( factorial(ll+mm)*factorial(ll-mm)*(2*ll+1) / ...
