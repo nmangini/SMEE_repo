@@ -99,8 +99,8 @@ reset(RandStream.getDefaultStream,seed);
 warning('off','MATLAB:RandStream:GetDefaultStream')
 tic
 
-clearvars -except run_name catalogue wv model seed lowfreq typeofscaling scaling ...
-    detno numPCs doTimeshift doDistance doPlot noise_curve
+%clearvars -except run_name catalogue wv model seed lowfreq typeofscaling scaling ...
+%    detno numPCs doTimeshift doDistance doPlot noise_curve
 
 evnoise = zeros(detno,1);
 
@@ -121,10 +121,10 @@ fs = 16384;
 sample_deltaT = 1/fs;
 
 % load the catalogues you want to compare
-load(sprintf('/data/nmangini/SMEE_repo/SMEE/final-MDC_%s-series',catalogue))
+load(sprintf('~/SMEE_repo/SMEE/final-MDC_%s-series',catalogue))
 
 % load the set of eigenvectors for each catalogue
-load(sprintf('/data/nmangini/SMEE_repo/SMEE/finalRvectorsPC_%s-series',model));
+load(sprintf('~/SMEE_repo/SMEE/finalRvectorsPC_%s-series',model));
 
 % sets up the priors and initial chain values, will need to adjust these to
 % include other catalogues. Can use findbetas.m to find max and mins.
@@ -657,7 +657,7 @@ postT= Ts(idx,:);
 postdis= distance(idx,:);
 
 HOME = getenv('SMEE_HOME');
-resultsdir=sprintf('/data/nmangini/SMEE_repo/SMEE/Results/%s/',run_name);
+resultsdir=sprintf('~/SMEE_repo/SMEE/Results/%s/',run_name);
 posterior_params_savefile = ['smee_output_' catalogue num2str(wv) '_model' model '_PCs' num2str(numPCs)...
     '_detno' num2str(detno) '_' typeofscaling strrep(num2str(scaling), '.', 'p') '_seed' num2str(seed)];
 save([resultsdir posterior_params_savefile],'catalogue','wv','model','betas','activebeta','detno',...
