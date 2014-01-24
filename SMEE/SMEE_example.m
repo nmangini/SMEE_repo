@@ -14,26 +14,32 @@
     % ~/SMEE_BBH/PCA/Q-series
     % ~/SMEE_BBH/Waveforms/Q-series
    
-addpath(genpath('~/SMEE_repo'))
+repo_root='/data/jclark/SMEEBBH/SMEE_repo'
+
+addpath(genpath(repo_root))
 
 % Creating the principle components:
     % See these scripts's comments for explanation of all steps
-    cd /home/nmangini/SMEE_repo/PCA/Q-series/Q_allmodes
+    disp('creating principle components...')
+    cd([repo_root,'/PCA/Q-series/Q_allmodes'])
     load_frame('Q')
-    Q_allmodes_loadmatrix % CHANGE PATH NAMES
-    Q_allmodes_pca
+    eval('Q_allmodes_loadmatrix')
+    eval('Q_allmodes_pca')
 %    Q_allmodes_match % optional
-    resampleQ
+    disp('resampling waveforms to data rate (usually 16384 Hz)')
+    eval('resampleQ')
     
-% Post-processing:
-    load_frame
+% Pre-processing (waveform alignment, truncation, ...):
+    cd([repo_root,'SMEE'])
+    disp('Loading PCs and Injections')
+    eval('load_frame')
     copyfile('finalRvectorsPC_Q-series.mat','~/SMEE_repo/SMEE/')
-    align_MDCs
+    eval('align_MDCs')
     copyfile('final-MDC_Q-series.mat','~/SMEE_repo/SMEE/')
-    cd /home/nmangini/SMEE_repo/SMEE/    
 
-% Running SMEE:    
-    SMEE_BBH('EXAMPLE-Q1-Q-seed13-snr10-pcs8','aligo','Q','Q',1,10,13,1,8,0,'SNR',10); % CHANGE PATH NAMES
+% Running SMEE:
+    disp('executing SMEE analysis...')
+    SMEE_BBH('EXAMPLE-Q1-Q-seed13-snr10-pcs8','aligo','Q','Q',1,10,13,1,8,0,'SNR',10);
     
     % NOTE: This script can take anywhere from 15 minutes to a couple hours
     % to finish running depending on the complexity of the signals and the
