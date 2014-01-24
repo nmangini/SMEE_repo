@@ -14,9 +14,10 @@
     % ~/SMEE_BBH/PCA/Q-series
     % ~/SMEE_BBH/Waveforms/Q-series
    
-repo_root='/data/jclark/SMEEBBH/SMEE_repo'
+repo_root='/data/jclark/SMEEBBH/SMEE_repo';
 
 addpath(genpath(repo_root))
+addpath('/home/jclark/opt/xpipeline/share/xpipeline/matlab')
 
 % Creating the principle components:
     % See these scripts's comments for explanation of all steps
