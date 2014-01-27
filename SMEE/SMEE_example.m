@@ -3,7 +3,7 @@
 % Setting up paths
 repo_root='~/SMEE_repo';
 addpath(genpath(repo_root))
-%addpath('/home/jclark/opt/xpipeline/share/xpipeline/matlab')
+addpath('/home/jclark/opt/xpipeline/share/xpipeline/matlab/')
 
 % Creating the principle components:
     % See these scripts's comments for explanation of all steps
@@ -19,6 +19,9 @@ addpath(genpath(repo_root))
     eval('resampleQ')
     
 % Pre-processing (waveform alignment, truncation, ...):
+    disp('##############')
+    disp('Pre-processing')
+    disp('##############')
     cd([repo_root,'SMEE'])
     disp('Loading PCs and Injections')
     eval('load_frame')
