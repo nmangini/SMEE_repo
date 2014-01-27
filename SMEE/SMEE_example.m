@@ -1,22 +1,9 @@
 % End-to-end SMEE example
 
-<<<<<<< HEAD
 % Setting up paths
-repo_root='/data/jclark/SMEEBBH/SMEE_repo'
-=======
-% NOTE: SMEE is hard coded to run with a specific directory setup:
-    % ~/SMEE_BBH/
-    % ~/SMEE_BBH/SMEE/
-    % ~/SMEE_BBH/SMEE/Results
-    % ~/SMEE_BBH/PCA/
-    % ~/SMEE_BBH/PCA/Q-series
-    % ~/SMEE_BBH/Waveforms/Q-series
-   
-repo_root='/data/jclark/SMEEBBH/SMEE_repo';
-
->>>>>>> 2baf6aacadf5923510dbd346baae656683d0fe74
+repo_root='~/SMEE_repo';
 addpath(genpath(repo_root))
-addpath('/home/jclark/opt/xpipeline/share/xpipeline/matlab')
+%addpath('/home/jclark/opt/xpipeline/share/xpipeline/matlab')
 
 % Creating the principle components:
     % See these scripts's comments for explanation of all steps
