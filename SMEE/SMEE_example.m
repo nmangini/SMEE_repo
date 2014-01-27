@@ -1,32 +1,20 @@
-% This script serves as a simple example on how to run SMEE end to end using 
-% the Q-series BBH merger waveforms. First, the principle components need to
-% be created of the desired waveform catalogue along with some post
-% prossessing of the signals and injections (assumed to be already
-% created). Then SMEE can be run with the principle components using any
-% injections dired (MDC frames). After SMEE runs plots can be made of the
-% output files to see how well the code performed
+% End-to-end SMEE example
 
-% NOTE: SMEE is hard coded to run with a specific directory setup:
-    % ~/SMEE_BBH/
-    % ~/SMEE_BBH/SMEE/
-    % ~/SMEE_BBH/SMEE/Results
-    % ~/SMEE_BBH/PCA/
-    % ~/SMEE_BBH/PCA/Q-series
-    % ~/SMEE_BBH/Waveforms/Q-series
-   
+% Setting up paths
 repo_root='/data/jclark/SMEEBBH/SMEE_repo'
-
 addpath(genpath(repo_root))
 
 % Creating the principle components:
     % See these scripts's comments for explanation of all steps
-    disp('creating principle components...')
+    disp('################################')
+    disp('Creating principle components...')
+    disp('################################')
     cd([repo_root,'/PCA/Q-series/Q_allmodes'])
     load_frame('Q')
     eval('Q_allmodes_loadmatrix')
     eval('Q_allmodes_pca')
-%    Q_allmodes_match % optional
-    disp('resampling waveforms to data rate (usually 16384 Hz)')
+    %Q_allmodes_match % optional
+    disp('Resampling waveforms to data rate (usually 16384 Hz)')
     eval('resampleQ')
     
 % Pre-processing (waveform alignment, truncation, ...):
@@ -38,7 +26,9 @@ addpath(genpath(repo_root))
     copyfile('final-MDC_Q-series.mat','~/SMEE_repo/SMEE/')
 
 % Running SMEE:
-    disp('executing SMEE analysis...')
+    disp('##########################')
+    disp('Executing SMEE analysis...')
+    disp('##########################')
     SMEE_BBH('EXAMPLE-Q1-Q-seed13-snr10-pcs8','aligo','Q','Q',1,10,13,1,8,0,'SNR',10);
     
     % NOTE: This script can take anywhere from 15 minutes to a couple hours
