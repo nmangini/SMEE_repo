@@ -20,6 +20,16 @@ NOTE: SMEE is hard coded to run with a specific directory setup:
  ~/SMEE_BBH/Waveforms/HR-series
  ~/SMEE_BBH/Waveforms/RO3-series
 
+CHANGE PATH NAMES IN THESE LOCATION:
+    ~/SMEE_repo/PCA/Q-series/Q_allmodes_loadmatrix.m 
+        line 21
+    ~/SMEE_repo/Utilities/load_frame.m 
+        lines 14, 24, 35
+    ~/SMEE_repo/SMEE/SMEE_BBH.m
+        lines 124, 126, 660
+
 AN EXAMPLE RUN
-    Run ~/SMEE_repo/SMEE/SMEE_example.m
-    All the functions live in ~/SMEE_repo/Utilities
+    >Run ~/SMEE_repo/SMEE/SMEE_example.m
+    >All the functions live in ~/SMEE_repo/Utilities
+    >All plots are commented out in this repository as to run this code in a
+    terminal

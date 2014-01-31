@@ -1,7 +1,7 @@
 % End-to-end SMEE example
 
 % Setting up paths
-repo_root='~/SMEE_repo';
+repo_root='/home/nmangini/SMEE_repo';
 addpath(genpath(repo_root))
 addpath('/home/jclark/opt/xpipeline/share/xpipeline/matlab/')
 
@@ -15,21 +15,20 @@ addpath('/home/jclark/opt/xpipeline/share/xpipeline/matlab/')
     eval('Q_allmodes_loadmatrix')
     eval('Q_allmodes_pca')
     %Q_allmodes_match % optional
-    disp('Resampling waveforms to data rate (usually 16384 Hz)')
-    eval('resampleQ')
-    
+        
 % Pre-processing (waveform alignment, truncation, ...):
     disp('##############')
     disp('Pre-processing')
     disp('##############')
-    cd([repo_root,'SMEE'])
+    disp('Resampling waveforms to data rate (usually 16384 Hz)')
+    eval('resampleQ')
     disp('Loading PCs and Injections')
-    eval('load_frame')
-    copyfile('finalRvectorsPC_Q-series.mat','~/SMEE_repo/SMEE/')
     eval('align_MDCs')
-    copyfile('final-MDC_Q-series.mat','~/SMEE_repo/SMEE/')
+    movefile('finalRvectorsPC_Q-series.mat',[repo_root,'/SMEE/'])
+    movefile('final-MDC_Q-series.mat',[repo_root,'/SMEE/'])
 
 % Running SMEE:
+    cd([repo_root,'/SMEE'])
     disp('##########################')
     disp('Executing SMEE analysis...')
     disp('##########################')
