@@ -1,0 +1,135 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE LIGO_LW SYSTEM "http://ldas-sw.ligo.caltech.edu/doc/ligolwAPI/html/ligolw_dtd.txt">
+<LIGO_LW>
+	<Table Name="processgroup:process:table">
+		<Column Type="lstring" Name="processgroup:process:program"/>
+		<Column Type="lstring" Name="processgroup:process:version"/>
+		<Column Type="lstring" Name="processgroup:process:cvs_repository"/>
+		<Column Type="int_4s" Name="processgroup:process:cvs_entry_time"/>
+		<Column Type="lstring" Name="processgroup:process:comment"/>
+		<Column Type="int_4s" Name="processgroup:process:is_online"/>
+		<Column Type="lstring" Name="processgroup:process:node"/>
+		<Column Type="lstring" Name="processgroup:process:username"/>
+		<Column Type="int_4s" Name="processgroup:process:unix_procid"/>
+		<Column Type="int_4s" Name="processgroup:process:start_time"/>
+		<Column Type="int_4s" Name="processgroup:process:end_time"/>
+		<Column Type="int_4s" Name="processgroup:process:jobid"/>
+		<Column Type="lstring" Name="processgroup:process:domain"/>
+		<Column Type="lstring" Name="processgroup:process:ifos"/>
+		<Column Type="ilwd:char" Name="processgroup:process:process_id"/>
+		<Stream Name="processgroup:process:table" Type="Local" Delimiter=",">
+			"inspinj","00e296be2efb93f0160d3b005c41fc426debf85b","CLEAN: All modifications committed",1047315370," ",0,"ldas-pcdev1","5486",26668,1056276396,1056276396,0,"lalapps","","process:process_id:0",
+			"ligolw_cbc_inject_overhead","pylal-v0.3.0-v1","lalsuite",1047423296,,0,"ldas-pcdev1","nmangini",26795,1056276530,1056276530,0,,,"process:process_id:1"
+		</Stream>
+	</Table>
+	<Table Name="process_paramsgroup:process_params:table">
+		<Column Type="lstring" Name="process_paramsgroup:process_params:program"/>
+		<Column Type="ilwd:char" Name="process_paramsgroup:process_params:process_id"/>
+		<Column Type="lstring" Name="process_paramsgroup:process_params:param"/>
+		<Column Type="lstring" Name="process_paramsgroup:process_params:type"/>
+		<Column Type="lstring" Name="process_paramsgroup:process_params:value"/>
+		<Stream Name="process_paramsgroup:process_params:table" Type="Local" Delimiter=",">
+			"inspinj","process:process_id:0","--seed","int","76",
+			"inspinj","process:process_id:0","--f-lower","float","10.000000",
+			"inspinj","process:process_id:0","--waveform","string","GATech",
+			"inspinj","process:process_id:0","--gps-start-time","int","900000005",
+			"inspinj","process:process_id:0","--gps-end-time","int","900000110",
+			"inspinj","process:process_id:0","--time-step","float","1.000000e+01",
+			"inspinj","process:process_id:0","--time-interval","float","0.000000e+00",
+			"inspinj","process:process_id:0","--l-distr","string","fixed",
+			"inspinj","process:process_id:0","--d-distr","string","uniform",
+			"inspinj","process:process_id:0","--i-distr","string","fixed",
+			"inspinj","process:process_id:0","--fixed-inc","float","0.000000e+00",
+			"inspinj","process:process_id:0","--longitude","float","0.000000e+00",
+			"inspinj","process:process_id:0","--latitude","float","0.000000e+00",
+			"inspinj","process:process_id:0","--polarization","float","0.000000e+00",
+			"inspinj","process:process_id:0","--min-distance","float","1.000000e+06",
+			"inspinj","process:process_id:0","--max-distance","float","1.000000e+06",
+			"inspinj","process:process_id:0","--nr-file","string","/home/nmangini/GATech_Studies/MDCframe_generation/Q-series/sim-D10_a0.0_q2.00_m103_Qs.xml",
+			"inspinj","process:process_id:0","--m-distr","string","nrwaves",
+			"inspinj","process:process_id:0","--min-mtotal","float","2.500000e+02",
+			"inspinj","process:process_id:0","--max-mtotal","float","2.500000e+02",
+			"inspinj","process:process_id:0","--min-mass1","float","5.000000e-01",
+			"inspinj","process:process_id:0","--max-mass1","float","5.000000e-01",
+			"inspinj","process:process_id:0","--min-mass2","float","5.000000e-01",
+			"inspinj","process:process_id:0","--max-mass2","float","5.000000e-01",
+			"inspinj","process:process_id:0","--disable-spin","string","",
+			"inspinj","process:process_id:0","--output","string","GHLTV-GATech-D10_a0.0_q2.00_m103_Qs-900000005-105.xml",
+			"ligolw_cbc_inject_overhead","process:process_id:1","--output-file","lstring","GHLTV-GATech-D10_a0.0_q2.00_m103_Qs-900000005-105.xml",
+			"ligolw_cbc_inject_overhead","process:process_id:1","--det-site","lstring","h"
+		</Stream>
+	</Table>
+	<Table Name="sim_inspiralgroup:sim_inspiral:table">
+		<Column Type="ilwd:char" Name="sim_inspiralgroup:sim_inspiral:process_id"/>
+		<Column Type="lstring" Name="sim_inspiralgroup:sim_inspiral:waveform"/>
+		<Column Type="int_4s" Name="sim_inspiralgroup:sim_inspiral:geocent_end_time"/>
+		<Column Type="int_4s" Name="sim_inspiralgroup:sim_inspiral:geocent_end_time_ns"/>
+		<Column Type="int_4s" Name="sim_inspiralgroup:sim_inspiral:h_end_time"/>
+		<Column Type="int_4s" Name="sim_inspiralgroup:sim_inspiral:h_end_time_ns"/>
+		<Column Type="int_4s" Name="sim_inspiralgroup:sim_inspiral:l_end_time"/>
+		<Column Type="int_4s" Name="sim_inspiralgroup:sim_inspiral:l_end_time_ns"/>
+		<Column Type="int_4s" Name="sim_inspiralgroup:sim_inspiral:g_end_time"/>
+		<Column Type="int_4s" Name="sim_inspiralgroup:sim_inspiral:g_end_time_ns"/>
+		<Column Type="int_4s" Name="sim_inspiralgroup:sim_inspiral:t_end_time"/>
+		<Column Type="int_4s" Name="sim_inspiralgroup:sim_inspiral:t_end_time_ns"/>
+		<Column Type="int_4s" Name="sim_inspiralgroup:sim_inspiral:v_end_time"/>
+		<Column Type="int_4s" Name="sim_inspiralgroup:sim_inspiral:v_end_time_ns"/>
+		<Column Type="real_8" Name="sim_inspiralgroup:sim_inspiral:end_time_gmst"/>
+		<Column Type="lstring" Name="sim_inspiralgroup:sim_inspiral:source"/>
+		<Column Type="real_4" Name="sim_inspiralgroup:sim_inspiral:mass1"/>
+		<Column Type="real_4" Name="sim_inspiralgroup:sim_inspiral:mass2"/>
+		<Column Type="real_4" Name="sim_inspiralgroup:sim_inspiral:mchirp"/>
+		<Column Type="real_4" Name="sim_inspiralgroup:sim_inspiral:eta"/>
+		<Column Type="real_4" Name="sim_inspiralgroup:sim_inspiral:distance"/>
+		<Column Type="real_4" Name="sim_inspiralgroup:sim_inspiral:longitude"/>
+		<Column Type="real_4" Name="sim_inspiralgroup:sim_inspiral:latitude"/>
+		<Column Type="real_4" Name="sim_inspiralgroup:sim_inspiral:inclination"/>
+		<Column Type="real_4" Name="sim_inspiralgroup:sim_inspiral:coa_phase"/>
+		<Column Type="real_4" Name="sim_inspiralgroup:sim_inspiral:polarization"/>
+		<Column Type="real_4" Name="sim_inspiralgroup:sim_inspiral:psi0"/>
+		<Column Type="real_4" Name="sim_inspiralgroup:sim_inspiral:psi3"/>
+		<Column Type="real_4" Name="sim_inspiralgroup:sim_inspiral:alpha"/>
+		<Column Type="real_4" Name="sim_inspiralgroup:sim_inspiral:alpha1"/>
+		<Column Type="real_4" Name="sim_inspiralgroup:sim_inspiral:alpha2"/>
+		<Column Type="real_4" Name="sim_inspiralgroup:sim_inspiral:alpha3"/>
+		<Column Type="real_4" Name="sim_inspiralgroup:sim_inspiral:alpha4"/>
+		<Column Type="real_4" Name="sim_inspiralgroup:sim_inspiral:alpha5"/>
+		<Column Type="real_4" Name="sim_inspiralgroup:sim_inspiral:alpha6"/>
+		<Column Type="real_4" Name="sim_inspiralgroup:sim_inspiral:beta"/>
+		<Column Type="real_4" Name="sim_inspiralgroup:sim_inspiral:spin1x"/>
+		<Column Type="real_4" Name="sim_inspiralgroup:sim_inspiral:spin1y"/>
+		<Column Type="real_4" Name="sim_inspiralgroup:sim_inspiral:spin1z"/>
+		<Column Type="real_4" Name="sim_inspiralgroup:sim_inspiral:spin2x"/>
+		<Column Type="real_4" Name="sim_inspiralgroup:sim_inspiral:spin2y"/>
+		<Column Type="real_4" Name="sim_inspiralgroup:sim_inspiral:spin2z"/>
+		<Column Type="real_4" Name="sim_inspiralgroup:sim_inspiral:theta0"/>
+		<Column Type="real_4" Name="sim_inspiralgroup:sim_inspiral:phi0"/>
+		<Column Type="real_4" Name="sim_inspiralgroup:sim_inspiral:f_lower"/>
+		<Column Type="real_4" Name="sim_inspiralgroup:sim_inspiral:f_final"/>
+		<Column Type="real_4" Name="sim_inspiralgroup:sim_inspiral:eff_dist_h"/>
+		<Column Type="real_4" Name="sim_inspiralgroup:sim_inspiral:eff_dist_l"/>
+		<Column Type="real_4" Name="sim_inspiralgroup:sim_inspiral:eff_dist_g"/>
+		<Column Type="real_4" Name="sim_inspiralgroup:sim_inspiral:eff_dist_t"/>
+		<Column Type="real_4" Name="sim_inspiralgroup:sim_inspiral:eff_dist_v"/>
+		<Column Type="int_4s" Name="sim_inspiralgroup:sim_inspiral:numrel_mode_min"/>
+		<Column Type="int_4s" Name="sim_inspiralgroup:sim_inspiral:numrel_mode_max"/>
+		<Column Type="lstring" Name="sim_inspiralgroup:sim_inspiral:numrel_data"/>
+		<Column Type="int_4s" Name="sim_inspiralgroup:sim_inspiral:amp_order"/>
+		<Column Type="lstring" Name="sim_inspiralgroup:sim_inspiral:taper"/>
+		<Column Type="int_4s" Name="sim_inspiralgroup:sim_inspiral:bandpass"/>
+		<Column Type="ilwd:char" Name="sim_inspiralgroup:sim_inspiral:simulation_id"/>
+		<Stream Name="sim_inspiralgroup:sim_inspiral:table" Type="Local" Delimiter=",">
+			"process:process_id:0","GATech",900000005,0,900000004,991052713,900000004,997160254,900000005,13048474,900000004,988557693,900000005,15410380,19637.95368609142,"",166.6667,83.33331,101.3941,0.2222222,1000,52.452651,46.262943,0,5.867774,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,10,0,1724.244,2174.133,1562.406,1737.051,1331.687,2,2,"file://localhost/mnt/qfs1/nmangini/GATech_Studies/MDCframe_generation/Q-series/./D10_a0.0_q2.00_m103_Qs.gwf",-1,"TAPER_NONE",0,"sim_inspiral:simulation_id:0",
+			"process:process_id:0","GATech",900000015,0,900000014,991061205,900000014,997173464,900000015,13048193,900000014,988548232,900000015,15409911,19637.95441530198,"",166.6667,83.33331,101.3941,0.2222222,1000,52.494432,46.262943,0,2.84995,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,10,0,1725.026,2175.393,1562.766,1736.325,1331.591,2,2,"file://localhost/mnt/qfs1/nmangini/GATech_Studies/MDCframe_generation/Q-series/./D10_a0.0_q2.00_m103_Qs.gwf",-1,"TAPER_NONE",0,"sim_inspiral:simulation_id:1",
+			"process:process_id:0","GATech",900000025,0,900000024,991069702,900000024,997186675,900000025,13047905,900000024,988538777,900000025,15409433,19637.95514451548,"",166.6667,83.33331,101.3941,0.2222222,1000,52.536213,46.262943,0,4.177277,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,10,0,1725.811,2176.653,1563.125,1735.599,1331.496,2,2,"file://localhost/mnt/qfs1/nmangini/GATech_Studies/MDCframe_generation/Q-series/./D10_a0.0_q2.00_m103_Qs.gwf",-1,"TAPER_NONE",0,"sim_inspiral:simulation_id:2",
+			"process:process_id:0","GATech",900000035,0,900000034,991078204,900000034,997199888,900000035,13047610,900000034,988529329,900000035,15408948,19637.95587372604,"",166.6667,83.33331,101.3941,0.2222222,1000,52.577993,46.262943,0,0.478394,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,10,0,1726.598,2177.914,1563.486,1734.873,1331.401,2,2,"file://localhost/mnt/qfs1/nmangini/GATech_Studies/MDCframe_generation/Q-series/./D10_a0.0_q2.00_m103_Qs.gwf",-1,"TAPER_NONE",0,"sim_inspiral:simulation_id:3",
+			"process:process_id:0","GATech",900000045,0,900000044,991086710,900000044,997213102,900000045,13047308,900000044,988519886,900000045,15408454,19637.95660293954,"",166.6667,83.33331,101.3941,0.2222222,1000,52.619774,46.262943,0,4.416512,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,10,0,1727.386,2179.176,1563.847,1734.146,1331.308,2,2,"file://localhost/mnt/qfs1/nmangini/GATech_Studies/MDCframe_generation/Q-series/./D10_a0.0_q2.00_m103_Qs.gwf",-1,"TAPER_NONE",0,"sim_inspiral:simulation_id:4",
+			"process:process_id:0","GATech",900000055,0,900000054,991095221,900000054,997226318,900000055,13046999,900000054,988510449,900000055,15407953,19637.9573321501,"",166.6667,83.33331,101.3941,0.2222222,1000,52.661555,46.262943,0,0.603201,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,10,0,1728.178,2180.439,1564.209,1733.419,1331.215,2,2,"file://localhost/mnt/qfs1/nmangini/GATech_Studies/MDCframe_generation/Q-series/./D10_a0.0_q2.00_m103_Qs.gwf",-1,"TAPER_NONE",0,"sim_inspiral:simulation_id:5",
+			"process:process_id:0","GATech",900000065,0,900000064,991103736,900000064,997239535,900000065,13046683,900000064,988501019,900000065,15407443,19637.95806136067,"",166.6667,83.33331,101.3941,0.2222222,1000,52.703336,46.262943,0,5.576896,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,10,0,1728.972,2181.703,1564.571,1732.691,1331.123,2,2,"file://localhost/mnt/qfs1/nmangini/GATech_Studies/MDCframe_generation/Q-series/./D10_a0.0_q2.00_m103_Qs.gwf",-1,"TAPER_NONE",0,"sim_inspiral:simulation_id:6",
+			"process:process_id:0","GATech",900000075,0,900000074,991112257,900000074,997252754,900000075,13046361,900000074,988491594,900000075,15406925,19637.95879057417,"",166.6667,83.33331,101.3941,0.2222222,1000,52.745116,46.262943,0,3.826654,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,10,0,1729.768,2182.969,1564.934,1731.963,1331.031,2,2,"file://localhost/mnt/qfs1/nmangini/GATech_Studies/MDCframe_generation/Q-series/./D10_a0.0_q2.00_m103_Qs.gwf",-1,"TAPER_NONE",0,"sim_inspiral:simulation_id:7",
+			"process:process_id:0","GATech",900000085,0,900000084,991120782,900000084,997265974,900000085,13046031,900000084,988482176,900000085,15406398,19637.95951978473,"",166.6667,83.33331,101.3941,0.2222222,1000,52.786897,46.262943,0,1.220012,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,10,0,1730.566,2184.235,1565.298,1731.235,1330.941,2,2,"file://localhost/mnt/qfs1/nmangini/GATech_Studies/MDCframe_generation/Q-series/./D10_a0.0_q2.00_m103_Qs.gwf",-1,"TAPER_NONE",0,"sim_inspiral:simulation_id:8",
+			"process:process_id:0","GATech",900000095,0,900000094,991129312,900000094,997279196,900000095,13045694,900000094,988472764,900000095,15405864,19637.9602489953,"",166.6667,83.33331,101.3941,0.2222222,1000,52.828678,46.262943,0,0.0575078,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,10,0,1731.367,2185.502,1565.662,1730.506,1330.851,2,2,"file://localhost/mnt/qfs1/nmangini/GATech_Studies/MDCframe_generation/Q-series/./D10_a0.0_q2.00_m103_Qs.gwf",-1,"TAPER_NONE",0,"sim_inspiral:simulation_id:9",
+			"process:process_id:0","GATech",900000105,0,900000104,991137846,900000104,997292419,900000105,13045351,900000104,988463358,900000105,15405321,19637.9609782088,"",166.6667,83.33331,101.3941,0.2222222,1000,52.870459,46.262943,0,3.807357,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,10,0,1732.17,2186.77,1566.027,1729.776,1330.762,2,2,"file://localhost/mnt/qfs1/nmangini/GATech_Studies/MDCframe_generation/Q-series/./D10_a0.0_q2.00_m103_Qs.gwf",-1,"TAPER_NONE",0,"sim_inspiral:simulation_id:10"
+		</Stream>
+	</Table>
+</LIGO_LW>
