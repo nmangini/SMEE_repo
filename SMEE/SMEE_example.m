@@ -1,7 +1,7 @@
 % End-to-end SMEE example
 
 % Setting up paths
-repo_root='/home/nmangini/SMEE_repo';
+repo_root='/data/jclark/SMEEBBH/SMEE_repo';
 addpath(genpath(repo_root))
 addpath('/home/jclark/opt/xpipeline/share/xpipeline/matlab/')
 
