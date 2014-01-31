@@ -27,6 +27,9 @@ CHANGE PATH NAMES IN THESE LOCATION:
         lines 14, 24, 35
     ~/SMEE_repo/SMEE/SMEE_BBH.m
         lines 124, 126, 660
+    ~/SMEE_repo/SMEE/SMEE_example.m
+        line 4
+
 
 AN EXAMPLE RUN
     >Run ~/SMEE_repo/SMEE/SMEE_example.m
