@@ -2,6 +2,9 @@
 % aligns the waveforms, zeros the data after the ringdown signal, shortens
 % the signal duration, and combines the spherical harmonic modes
 
+% get env variables
+SMEEBBH_PREFIX=getenv('SMEEBBH_PREFIX');
+
 tic
 % Set up variables and solution arrays
 qvalue = [1; 1.15; 1.3; 1.45; 1.5; 1.6; 1.75; 1.9; 2; 2.05; 2.20; 2.35; 2.50];
@@ -18,7 +21,7 @@ qvaluestr = cellstr(num2str(qvalue,'%4.2f')); % String of q values
 for qcnt1 = 1:length(qvalue)
     for lcnt1 = 2:4;
         for mcnt1 = 1:3
-            fname = strcat('/home/nmangini/SMEE_repo/Waveforms/Q-series/D10_a0.0_q',...
+            fname = strcat(sprintf('%s/Waveforms/Q-series/D10_a0.0_q',SMEEBBH_PREFIX),...
                 qvaluestr{qcnt1}, '_m103_Qs/rStrain_FFI_l', num2str(lcnt1), '_m',...
                 num2str(mvalue(lcnt1-1,mcnt1)) ,'_r75.00.asc');
             importfile(fname);

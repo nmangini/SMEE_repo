@@ -1,16 +1,17 @@
 % End-to-end SMEE example
 
 % Setting up paths
-repo_root='/data/jclark/SMEEBBH/SMEE_repo';
-addpath(genpath(repo_root))
-addpath('/home/jclark/opt/xpipeline/share/xpipeline/matlab/')
+SMEEBBH_PREFIX=getenv('SMEEBBH_PREFIX')
+FRGETVECT_PATH=getenv('FRGETVECT_PATH')
+addpath(genpath(SMEEBBH_PREFIX))
+addpath(genpath(FRGETVECT_PATH))
 
 % Creating the principle components:
     % See these scripts's comments for explanation of all steps
     disp('################################')
     disp('Creating principle components...')
     disp('################################')
-    cd([repo_root,'/PCA/Q-series/Q_allmodes'])
+    cd([SMEEBBH_PREFIX,'/PCA/Q-series/Q_allmodes'])
     load_frame('Q')
     eval('Q_allmodes_loadmatrix')
     eval('Q_allmodes_pca')
@@ -24,11 +25,11 @@ addpath('/home/jclark/opt/xpipeline/share/xpipeline/matlab/')
     eval('resampleQ')
     disp('Loading PCs and Injections')
     eval('align_MDCs')
-    movefile('finalRvectorsPC_Q-series.mat',[repo_root,'/SMEE/'])
-    movefile('final-MDC_Q-series.mat',[repo_root,'/SMEE/'])
+    movefile('finalRvectorsPC_Q-series.mat',[SMEEBBH_PREFIX,'/SMEE/'])
+    movefile('final-MDC_Q-series.mat',[SMEEBBH_PREFIX,'/SMEE/'])
 
 % Running SMEE:
-    cd([repo_root,'/SMEE'])
+    cd([SMEEBBH_PREFIX,'/SMEE'])
     disp('##########################')
     disp('Executing SMEE analysis...')
     disp('##########################')

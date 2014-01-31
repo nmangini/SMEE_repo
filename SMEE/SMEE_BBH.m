@@ -121,10 +121,11 @@ fs = 16384;
 sample_deltaT = 1/fs;
 
 % load the catalogues you want to compare
-load(sprintf('/home/nmangini/SMEE_repo/SMEE/final-MDC_%s-series',catalogue))
+SMEEBBH_PREFIX=getenv('SMEEBBH_PREFIX')
+load(sprintf('%s/SMEE/final-MDC_%s-series',SMEEBBH_PREFIX,catalogue))
 
 % load the set of eigenvectors for each catalogue
-load(sprintf('/home/nmangini/SMEE_repo/SMEE/finalRvectorsPC_%s-series',model));
+load(sprintf('%s/SMEE/finalRvectorsPC_%s-series',SMEEBBH_PREFIX,model));
 
 % sets up the priors and initial chain values, will need to adjust these to
 % include other catalogues. Can use findbetas.m to find max and mins.
@@ -656,8 +657,7 @@ postbetas = betas(idx,:);
 postT= Ts(idx,:);
 postdis= distance(idx,:);
 
-HOME = getenv('SMEE_HOME');
-resultsdir=sprintf('/home/nmangini/SMEE_repo/SMEE/Results/%s/',run_name);
+resultsdir=sprintf('%s/SMEE/Results/%s/',SMEEBBH_PREFIX,run_name);
 posterior_params_savefile = ['smee_output_' catalogue num2str(wv) '_model' model '_PCs' num2str(numPCs)...
     '_detno' num2str(detno) '_' typeofscaling strrep(num2str(scaling), '.', 'p') '_seed' num2str(seed)];
 save([resultsdir posterior_params_savefile],'catalogue','wv','model','betas','activebeta','detno',...

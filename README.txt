@@ -20,19 +20,19 @@ NOTE: SMEE is hard coded to run with a specific directory setup:
  ~/SMEE_BBH/Waveforms/HR-series
  ~/SMEE_BBH/Waveforms/RO3-series
 
-CHANGE PATH NAMES IN THESE LOCATION:
-    ~/SMEE_repo/PCA/Q-series/Q_allmodes_loadmatrix.m 
-        line 21
-    ~/SMEE_repo/Utilities/load_frame.m 
-        lines 14, 24, 35
-    ~/SMEE_repo/SMEE/SMEE_BBH.m
-        lines 124, 126, 660
-    ~/SMEE_repo/SMEE/SMEE_example.m
-        line 4
-
-
 AN EXAMPLE RUN
     >Run ~/SMEE_repo/SMEE/SMEE_example.m
     >All the functions live in ~/SMEE_repo/Utilities
     >All plots are commented out in this repository as to run this code in a
     terminal
+
+To set your environment, simply run the setup.sh script and source the
+resulting file.  E.g.,:
+
+[jclark@solyaris] $ sh setup.sh 
+[jclark@solyaris] $ source smee_env.sh 
+[jclark@solyaris] $ echo ${SMEEBBH_PREFIX}
+/data/jclark/SMEEBBH/SMEE_repo
+
+Please note that the setup.sh script requires the location of frgetvect if
+this is not already in your matlab path and needs to be edited BY HAND.
