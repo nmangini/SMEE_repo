@@ -1,4 +1,4 @@
-function SMEE_BBH(run_name, noiseType, model, catalogue, wv, lowfreq, seed, detno,numPCs,doPlot,typeofscaling, scaling, doDistance, doTimeshift)
+function SMEE_BBH(run_name, noiseType, model, catalogue, wv, lowfreq, highfreq, seed, detno,numPCs,doPlot,typeofscaling, scaling, doDistance, doTimeshift)
 %nested sampling code with coherent analysis of multiple detectors,
 %coloured noise, and the possibility of a time shift between the location
 %of signal in the data and the reconstruction of it
@@ -35,7 +35,8 @@ function SMEE_BBH(run_name, noiseType, model, catalogue, wv, lowfreq, seed, detn
 %               = 1...13 for Q
 %               = 1...15 for HR
 %               = 1...20  for RO3
-%           lowfreq -- frequency cut off
+%           lowfreq -- low frequency cut-off
+%           highfreq -- high frequency cut-off
 %           seed -- random seed used to control noise generation etc.
 %           typeofscaling -- type of scaling to be applied to waveform 
 %               = 'SNR'  for SNR scaling
@@ -99,8 +100,8 @@ reset(RandStream.getDefaultStream,seed);
 warning('off','MATLAB:RandStream:GetDefaultStream')
 tic
 
-%clearvars -except run_name catalogue wv model seed lowfreq typeofscaling scaling ...
-%    detno numPCs doTimeshift doDistance doPlot noise_curve
+clearvars -except run_name catalogue wv model seed lowfreq highfreq typeofscaling scaling ...
+    detno numPCs doTimeshift doDistance doPlot noise_curve
 
 evnoise = zeros(detno,1);
 
@@ -121,11 +122,10 @@ fs = 16384;
 sample_deltaT = 1/fs;
 
 % load the catalogues you want to compare
-SMEEBBH_PREFIX=getenv('SMEEBBH_PREFIX')
-load(sprintf('%s/SMEE/final-MDC_%s-series',SMEEBBH_PREFIX,catalogue))
+load(sprintf('/data/nmangini/SMEE_BBH/SMEE/final-MDC_%s-series',catalogue))
 
 % load the set of eigenvectors for each catalogue
-load(sprintf('%s/SMEE/finalRvectorsPC_%s-series',SMEEBBH_PREFIX,model));
+load(sprintf('/data/nmangini/SMEE_BBH/SMEE/finalRvectorsPC_%s-series',model));
 
 % sets up the priors and initial chain values, will need to adjust these to
 % include other catalogues. Can use findbetas.m to find max and mins.
@@ -233,7 +233,7 @@ end
 
 
 % set the number of active points in the Nested Sampling
-numactive = 1000;
+numactive = 3000;
 
 % set the number of iterations in the MCMC for finding the next active
 % point
@@ -294,7 +294,7 @@ for i=1:detno
 %     length(wave)
     
     if ~isempty(find(strcmpi(typeofscaling,{'SNR'})))
-    SNR=computeSNR_colourednoise(wave, sigma, lowfreq);
+    SNR=computeSNR_colourednoise(wave, sigma, lowfreq, highfreq);
     scale_factor = scaling/SNR;
     wave0 = scale_factor*wave;
     effective_distance = 10/scale_factor;
@@ -322,9 +322,10 @@ for i=1:detno
     
     % Find index of frequency cut off
     lowfreq_index = find(round(f)==lowfreq,1);
+    highfreq_index = find(round(f)==highfreq,1);
 
     %function to compute SNR of the waveform
-    SNR=computeSNR_colourednoise(wave0, sigma, lowfreq);
+    SNR=computeSNR_colourednoise(wave0, sigma, lowfreq,highfreq);
     fprintf(1, 'Detector %i: SNR = %f\n', i, SNR);
     
     % inject waveform into two streams of gaussian noise and compute FFT
@@ -337,7 +338,7 @@ for i=1:detno
     
     % calculates the log of the evidence for noise only
    %evnoise(i) = -2*(sample_deltaT/len)*sum((abs((wave_ft(:,i))).^2)./(abs((sigma)).^2));
-    evnoise(i) = -2*deltaF*sum((abs(wave_ft(lowfreq_index:end,i)).^2)./((sigma(lowfreq_index:end))));
+    evnoise(i) = -2*deltaF*sum((abs(wave_ft(lowfreq_index:highfreq_index,i)).^2)./((sigma(lowfreq_index:highfreq_index))));
     fprintf(1, 'Detector %i: log(Noise evidence) = %f\n', i, evnoise(i));
    
     %BEGIN save plots for testing purposes (to check against the Shoemaker aLIGO noise curve)
@@ -657,7 +658,8 @@ postbetas = betas(idx,:);
 postT= Ts(idx,:);
 postdis= distance(idx,:);
 
-resultsdir=sprintf('%s/SMEE/Results/%s/',SMEEBBH_PREFIX,run_name);
+HOME = getenv('SMEE_HOME');
+resultsdir=sprintf('/data/nmangini/SMEE_BBH/SMEE/Results/%s/',run_name);
 posterior_params_savefile = ['smee_output_' catalogue num2str(wv) '_model' model '_PCs' num2str(numPCs)...
     '_detno' num2str(detno) '_' typeofscaling strrep(num2str(scaling), '.', 'p') '_seed' num2str(seed)];
 save([resultsdir posterior_params_savefile],'catalogue','wv','model','betas','activebeta','detno',...
