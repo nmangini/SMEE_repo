@@ -1,4 +1,4 @@
-function[snr]=computeSNR_colourednoise(sigwonoise, DetectorNoiseFile, lowfreq)
+function[snr]=computeSNR_colourednoise(sigwonoise, DetectorNoiseFile, lowfreq, highfreq)
 % Script to calculate values to characterize the intensity of the signal
 % a) SNR
 
@@ -35,13 +35,14 @@ end
 
 % Find index of frequency cut off
 lowfreq_index = find(round(f)==lowfreq,1);
+highfreq_index = find(round(f)==highfreq,1);
 
 sig_ft = fft(sig)*deltaT;
 sig_ft = sig_ft(2:numFreqs+1);
 % sig_ft = sig_ft(2:numFreqs);
 %DetectorNoiseFile = DetectorNoiseFile(2:numFreqs+1);
 
-snr = sqrt((4*(deltaF)*sum(abs(sig_ft(lowfreq_index:end)).^2./abs(DetectorNoiseFile(lowfreq_index:end)))));
+snr = sqrt((4*(deltaF)*sum(abs(sig_ft(lowfreq_index:highfreq_index)).^2./abs(DetectorNoiseFile(lowfreq_index:highfreq_index)))));
 %snr = sqrt((4*((deltaT/len))*sum(((abs(sig_ft(30:end))).^2)./((DetectorNoiseFile(30:end)).^2))));
 
 % % noise addition
