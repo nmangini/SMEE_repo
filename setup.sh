@@ -6,6 +6,7 @@
 # and stripping off the name
 SMEEBBH_PREFIX=`python -c "import os, sys; print os.path.realpath('${0}')" | sed 's|/setup.sh||g'`
 FRGETVECT_PATH="/home/jclark/opt/xpipeline/share/xpipeline/matlab/"
+MATLABPATH="${SMEEBBH_PREFIX}"
 
 echo "export SMEEBBH_PREFIX=${SMEEBBH_PREFIX}" > smee_env.sh
 echo "export FRGETVECT_PATH=${FRGETVECT_PATH}" >> smee_env.sh
