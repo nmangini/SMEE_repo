@@ -1,12 +1,10 @@
-function logL = like_gauss_fspace(wave_ft, noise, deltaF, len, freqs, T_shift, model,varargin)
+function logL = like_gauss_fspace_td(wave_ft, noise, deltaF, lowfreq_index, highfreq_index, len, freqs, T_shift, model, varargin)
 % This function calculates the likelihood, assuming a Gaussian
 % distribution, given some data (containing a signal and noise), the
 % PSD of the noise, and a model function.
 %
 % The code will return the likelihood value, and the natural logarithm of
 % the likelihood value.
-
-lowfreq_index = 13;
 
 % check whether model is a function handle (or string that is a function
 % name)
@@ -20,6 +18,7 @@ end
 
 % Find index of frequency cut off
 %lowfreq_index = find(round(f)==lowfreq,1);
+%highfreq_index = find(round(f)==highfreq,1);
 
 % evaluate the model, including a time shift
 md=feval(f, varargin{:});
@@ -32,7 +31,7 @@ end
 
 % get the log likelihood
 %logL = -2*(1/(deltaT*len))*sum(((abs(wave_ft - md_ft)).^2)./(abs(noise).^2)); ...
-logL = -2*deltaF*sum(((abs(wave_ft(lowfreq_index:end) - md_ft(lowfreq_index:end))).^2)./(noise(lowfreq_index:end)));
+logL = -2*deltaF*sum(((abs(wave_ft(lowfreq_index:highfreq_index) - md_ft(lowfreq_index:highfreq_index))).^2)./(noise(lowfreq_index:highfreq_index)));
 %logL = -sum(((abs(wave_ft - md_ft)).^2)./(abs(noise).^2));
 %logL = -sum(((abs(wave_ft - md_ft)).^2)./noise_PSD); ...
     %- 0.5*sum(log(2*deltaT/(pi*len*Pf1)));
