@@ -1,6 +1,9 @@
 function SMEE_BBH(run_name, noiseType, model, catalogue, wv, lowfreq, highfreq, seed, detno,numPCs,doPlot,typeofscaling, scaling, doDistance, doTimeshift)
 
-addpath(genpath('/data/nmangini/SMEE_BBH'))
+SMEEBBH_PREFIX=getenv('SMEEBBH_PREFIX');
+FRGETVECT_PATH=getenv('FRGETVECT_PATH');
+addpath(genpath(SMEEBBH_PREFIX))
+addpath(genpath(FRGETVECT_PATH))
 
 %nested sampling code with coherent analysis of multiple detectors,
 %coloured noise, and the possibility of a time shift between the location
@@ -104,7 +107,7 @@ warning('off','MATLAB:RandStream:GetDefaultStream')
 tic
 
 clearvars -except run_name catalogue wv model seed lowfreq highfreq typeofscaling scaling ...
-    detno numPCs doTimeshift doDistance doPlot noise_curve
+    detno numPCs doTimeshift doDistance doPlot noise_curve SMEEBBH_PREFIX
 
 evnoise = zeros(detno,1);
 
@@ -125,10 +128,10 @@ fs = 16384;
 sample_deltaT = 1/fs;
 
 % load the catalogues you want to compare
-load(sprintf('/data/nmangini/SMEE_BBH/SMEE/final-MDC_%s-series',catalogue))
+load(sprintf('%s/SMEE/final-MDC_%s-series',SMEEBBH_PREFIX,catalogue))
 
 % load the set of eigenvectors for each catalogue
-load(sprintf('/data/nmangini/SMEE_BBH/SMEE/finalRvectorsPC_%s-series',model));
+load(sprintf('%s/SMEE/finalRvectorsPC_%s-series',SMEEBBH_PREFIX,model));
 
 % sets up the priors and initial chain values, will need to adjust these to
 % include other catalogues. Can use findbetas.m to find max and mins.
@@ -452,7 +455,9 @@ if(doPlot)
     figure('OuterPosition',[70,100,1200,600]);
 end
 
-resultsdir=sprintf('/data/nmangini/SMEE_BBH/SMEE/Results/%s/',run_name);
+% Define the output directory so that we can save intermittently
+resultsdir=run_name;
+mkdir resultsdir
 
 while j-2 <= numactive * infosafe * H(j-1)
     %disp(sprintf('j-2: %.2f | stop: %.2f', j-2, numactive * infosafe * H(j-1)))
@@ -625,9 +630,10 @@ while j-2 <= numactive * infosafe * H(j-1)
     
     j=j+1;
     
-    if rem(j,500) == 0
-	workspace_filename = strcat('workspace_iteration',j,'.mat');
-        save([resultsdir workspace_filename])
+    if rem(j,10) == 0
+        disp('saving workspace')
+        workspace_filename = strcat('workspace_iteration',j,'.mat');
+        save([resultsdir '/' workspace_filename])
     end
 end
 
@@ -665,8 +671,6 @@ postbetas = betas(idx,:);
 postT= Ts(idx,:);
 postdis= distance(idx,:);
 
-HOME = getenv('SMEE_HOME');
-resultsdir=sprintf('/data/nmangini/SMEE_BBH/SMEE/Results/%s/',run_name);
 posterior_params_savefile = ['smee_output_' catalogue num2str(wv) '_model' model '_PCs' num2str(numPCs)...
     '_detno' num2str(detno) '_' typeofscaling strrep(num2str(scaling), '.', 'p') '_seed' num2str(seed)];
 save([resultsdir posterior_params_savefile],'catalogue','wv','model','betas','activebeta','detno',...
