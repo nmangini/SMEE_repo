@@ -1,4 +1,7 @@
 function SMEE_BBH(run_name, noiseType, model, catalogue, wv, lowfreq, highfreq, seed, detno,numPCs,doPlot,typeofscaling, scaling, doDistance, doTimeshift)
+
+addpath(genpath('/data/nmangini/SMEE_BBH'))
+
 %nested sampling code with coherent analysis of multiple detectors,
 %coloured noise, and the possibility of a time shift between the location
 %of signal in the data and the reconstruction of it
@@ -233,7 +236,7 @@ end
 
 
 % set the number of active points in the Nested Sampling
-numactive = 3000;
+numactive = 500;
 
 % set the number of iterations in the MCMC for finding the next active
 % point
@@ -363,7 +366,7 @@ end
 
 
 
-V=PCs_final * 1e-15;% * scale_factor;
+V=PCs_final * 1e-20;% * scale_factor;
 
 %PCs in fourier domain
 V_ft_full = fft(V)*sample_deltaT;
@@ -425,7 +428,7 @@ likeactive = zeros(1,numactive) + sum(betaprior(1:numPCs)) ...
 for j=1:numactive
     for i=1:detno
         lp = like_gauss_fspace_td(wave_ft(:,i), sigdet(:,i), ...
-            deltaF, len, f, activeT(j), @findy, V_ft, activebeta(j,:), ...
+            deltaF, len, f, lowfreq_index, highfreq_index, activeT(j), @findy, V_ft, activebeta(j,:), ...
             actived(j), numPCs);
         
         likeactive(j) = likeactive(j) + lp;% + sum(betaprior);
@@ -448,6 +451,8 @@ H(1) = 0;
 if(doPlot)
     figure('OuterPosition',[70,100,1200,600]);
 end
+
+resultsdir=sprintf('/data/nmangini/SMEE_BBH/SMEE/Results/%s/',run_name);
 
 while j-2 <= numactive * infosafe * H(j-1)
     %disp(sprintf('j-2: %.2f | stop: %.2f', j-2, numactive * infosafe * H(j-1)))
@@ -583,7 +588,7 @@ while j-2 <= numactive * infosafe * H(j-1)
             Lnew = sum(betaprior(1:numPCs)) + Tprior + dprior;
             for i=1:detno
                 lp = like_gauss_fspace_td(wave_ft(:,i), sigma, ...
-                    deltaF, len, f, Tnew, @findy, V_ft, betanew, dnew, numPCs);
+                    deltaF, len, f, Tnew, lowfreq_index, highfreq_index, @findy, V_ft, betanew, dnew, numPCs);
                 
                 Lnew = Lnew + lp;% + sum(betaprior) ;
             end
@@ -619,10 +624,12 @@ while j-2 <= numactive * infosafe * H(j-1)
     likeactive(idx) = Lcur;
     
     j=j+1;
+    
+    if rem(j,500) == 0
+	workspace_filename = strcat('workspace_iteration',j,'.mat');
+        save([resultsdir workspace_filename])
+    end
 end
-
-% Save movie frames
-% save('MovieFrames','Movie')
 
 % we're no longer reducing the prior distribution, so weights stay the same
 % as (1/N)*X_j
