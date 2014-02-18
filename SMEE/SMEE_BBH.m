@@ -431,8 +431,8 @@ likeactive = zeros(1,numactive) + sum(betaprior(1:numPCs)) ...
 for j=1:numactive
     for i=1:detno
         lp = like_gauss_fspace_td(wave_ft(:,i), sigdet(:,i), ...
-            deltaF, len, f, lowfreq_index, highfreq_index, activeT(j), @findy, V_ft, activebeta(j,:), ...
-            actived(j), numPCs);
+            deltaF, len, f, lowfreq_index, highfreq_index, activeT(j), ...
+            @findy, V_ft, activebeta(j,:), actived(j), numPCs);
         
         likeactive(j) = likeactive(j) + lp;% + sum(betaprior);
         
@@ -457,10 +457,16 @@ end
 
 % Define the output directory so that we can save intermittently
 resultsdir=run_name;
-mkdir resultsdir
+mkdir(resultsdir)
+
+verbose=1;
 
 while j-2 <= numactive * infosafe * H(j-1)
-    %disp(sprintf('j-2: %.2f | stop: %.2f', j-2, numactive * infosafe * H(j-1)))
+
+    if verbose
+        disp(sprintf('j-2: %.2f | stop: %.2f', j-2, numactive * infosafe * H(j-1)))
+    end
+
     if(doPlot)
         activebeta_avg = mean(activebeta);
         activeD_avg = mean(actived);
@@ -559,6 +565,7 @@ while j-2 <= numactive * infosafe * H(j-1)
         acc = 0; % count accepted points
         
         % start MCMC chain
+        %if verbose; disp('sampling new point'); end
         for k=1:nits
             % generate new position from proposal
             gasvals = randn(numPCs + doTimeshift + doDistance,1);
@@ -581,6 +588,7 @@ while j-2 <= numactive * infosafe * H(j-1)
             if any((betanew < minbeta(1:numPCs)) | (betanew > maxbeta(1:numPCs))) || ...
                     dnew < mind || dnew > maxd || ...
                     Tnew < minT || Tnew > maxT
+                %disp('outside prior')
                 
                 betachain(k+1,:) = betachain(k,:);
                 Tchain(k+1) = Tchain(k);
@@ -592,8 +600,10 @@ while j-2 <= numactive * infosafe * H(j-1)
             %coherent case: L is product over individual detector likelihoods
             Lnew = sum(betaprior(1:numPCs)) + Tprior + dprior;
             for i=1:detno
+                %disp('computing likelihood')
                 lp = like_gauss_fspace_td(wave_ft(:,i), sigma, ...
-                    deltaF, len, f, Tnew, lowfreq_index, highfreq_index, @findy, V_ft, betanew, dnew, numPCs);
+                    deltaF, len, f, lowfreq_index, highfreq_index, Tnew, ...
+                    @findy, V_ft, betanew, dnew, numPCs);
                 
                 Lnew = Lnew + lp;% + sum(betaprior) ;
             end
@@ -614,12 +624,12 @@ while j-2 <= numactive * infosafe * H(j-1)
                 Tchain(k+1) = Tchain(k);
                 dchain(k+1) = dchain(k);
             end
-        end
+        end % MCMC sampling
         
         if acc > 0
             good = 1;
         end
-    end
+    end 
     % substitute the final values of the MCMC chain into the position of
     % Lmin
     activebeta(idx,:) = betachain(end,:);
@@ -630,9 +640,9 @@ while j-2 <= numactive * infosafe * H(j-1)
     
     j=j+1;
     
-    if rem(j,10) == 0
+    if rem(j,500) == 0
         disp('saving workspace')
-        workspace_filename = strcat('workspace_iteration',j,'.mat');
+        workspace_filename = strcat('workspace_iteration',num2str(j),'.mat');
         save([resultsdir '/' workspace_filename])
     end
 end
