@@ -131,10 +131,10 @@ fid=fopen(outfilename,'w');
 disp('beginning loop over injections')
 for i=1:length(injtimes)
 
-	if sum(signal_times>=str2double(injtimes{i})-0.1 & signal_times<str2double(injtimes{i})+0.1)
+	if sum(signal_times>=str2double(injtimes{i})-0.5 & signal_times<str2double(injtimes{i})+0.5)
 
-	   injection=signal_hoft( signal_times>=str2double(injtimes{i})-0.1 ...
-			& signal_times<str2double(injtimes{i})+0.1 );
+	   injection=signal_hoft( signal_times>=str2double(injtimes{i})-0.5 ...
+			& signal_times<str2double(injtimes{i})+0.5 );
 
 	   [snr,hrss,hpeak,fchar,bw,tchar,dur,fpeak]=xoptimalsnr(injection, ...
 			0, fs, noise_asd_interp.^2 ,10 , dF, Fmin, Fmax);
