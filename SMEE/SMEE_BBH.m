@@ -1,4 +1,6 @@
-function SMEE_BBH(run_name, noiseType, model, catalogue, wv, lowfreq, highfreq, seed, detno,numPCs,doPlot,typeofscaling, scaling, doDistance, doTimeshift)
+function SMEE_BBH(run_name, noiseType, model, catalogue, ...
+    wv, lowfreq, highfreq, seed, detno,numPCs,doPlot,...
+    typeofscaling, scaling, doDistance, doTimeshift)
 
 SMEEBBH_PREFIX=getenv('SMEEBBH_PREFIX');
 FRGETVECT_PATH=getenv('FRGETVECT_PATH');
@@ -227,7 +229,8 @@ end
 
 if(doDistance)
     maxd=1;
-    mind=0.05;
+    %mind=0.05;
+    mind=1e-10;
     drange=maxd-mind;
     dprior=-log(drange);
 else
@@ -239,11 +242,11 @@ end
 
 
 % set the number of active points in the Nested Sampling
-numactive = 500;
+numactive = 50;
 
 % set the number of iterations in the MCMC for finding the next active
 % point
-nits = 50;
+nits = 10;
 
 % This loads the waveform indicated in the input
 wave=MDC_final(:,wv);
@@ -302,6 +305,7 @@ for i=1:detno
     if ~isempty(find(strcmpi(typeofscaling,{'SNR'})))
     SNR=computeSNR_colourednoise(wave, sigma, lowfreq, highfreq);
     scale_factor = scaling/SNR;
+    fprintf(1, 'Scale Factor: %f\n', scale_factor);
     wave0 = scale_factor*wave;
     effective_distance = 10/scale_factor;
     fprintf(1, 'Effective Distance: %f kpc\n', effective_distance);
@@ -369,7 +373,7 @@ end
 
 
 
-V=PCs_final * 1e-20;% * scale_factor;
+V=PCs_final * 1.1963542944976191e-20 * scale_factor;
 
 %PCs in fourier domain
 V_ft_full = fft(V)*sample_deltaT;
@@ -640,11 +644,11 @@ while j-2 <= numactive * infosafe * H(j-1)
     
     j=j+1;
     
-    if rem(j,500) == 0
-        disp('saving workspace')
-        workspace_filename = strcat('workspace_iteration',num2str(j),'.mat');
-        save([resultsdir '/' workspace_filename])
-    end
+    %if rem(j,500) == 0
+    %    disp('saving workspace')
+    %    workspace_filename = strcat('workspace_iteration',num2str(j),'.mat');
+    %    save([resultsdir '/' workspace_filename])
+    %end
 end
 
 % we're no longer reducing the prior distribution, so weights stay the same
