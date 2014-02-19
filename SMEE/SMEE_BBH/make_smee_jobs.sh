@@ -22,7 +22,18 @@ runid=${RANDOM}
 outdir=${waveform}
 
 # The name of the condor submission file for this run
-subfile=${signal}_${runid}.sub
+subfile=cat-${model}_inj-${signal}_${runid}.sub
+shellfile=cat-${model}_inj-${signal}_${runid}.sh
+
+echo '
+#!/bin/bash 
+####################
+# SMEE BBH
+####################
+# Run this interactively
+
+' >> ${shellfile}
+
 
 # The header for the sub file
 echo '
@@ -53,6 +64,10 @@ do
     arguments = ${signal} ${job_number} ${waveformN} ${model}
     queue
     """ >> ${subfile}
+
+    echo """
+    sh SMEE_BBH.sh ${signal} ${job_number} ${waveformN} ${model}
+    """ > ${shellfile}
 
 done
 

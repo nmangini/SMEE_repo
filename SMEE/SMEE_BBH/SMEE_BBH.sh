@@ -11,10 +11,21 @@ jobnum=${2}
 waveformN=${3}
 model=${4}
 
+targetSNR=50
+Fmin=10
+Fmax=100
+NumPCA=8
+
+Ndet=1 # DON"T CHANGE THIS
+doplots=0
+dodistance=1
+
 # Make directory if it doesn't already exist
-mkdir -p /data/nmangini/SMEE_BBH/SMEE/Results/${signal}${waveformN}-${model}-seed${jobnum}-snr10-pcs8
+mkdir -p ${PWD}/${signal}${waveformN}-${model}-seed${jobnum}
 
 # Your matlab path (matlab willl now know about all the codes in this directory)
-export MATLABPATH=${MATLABPATH}:"/data/nmangini/SMEE_BBH/SMEE"
+export MATLABPATH=${MATLABPATH}:"${SMEEBBH_PREFIX}/SMEE"
 
-matlab -singleCompThread -nosplash -nojvm -nodisplay -r "SMEE_BBH('${signal}${waveformN}-${model}-seed${jobnum}-snr10-pcs8-highf','aligo','${model}','${signal}',${waveformN},10,100,${jobnum},1,8,0,'SNR',100)"
+
+echo matlab -nosplash -nojvm -nodisplay -r "SMEE_BBH('${signal}${waveformN}-${model}-seed${jobnum}','aligo','${model}','${signal}',${waveformN},${Fmin},${Fmax},${jobnum},${Ndet},${NumPCA},${doplots},'SNR',${targetSNR},${dodistance})"
+matlab -nosplash -nojvm -nodisplay -r "SMEE_BBH('${signal}${waveformN}-${model}-seed${jobnum}','aligo','${model}','${signal}',${waveformN},${Fmin},${Fmax},${jobnum},${Ndet},${NumPCA},${doplots},'SNR',${targetSNR},${dodistance})"
