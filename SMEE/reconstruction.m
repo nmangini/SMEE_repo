@@ -2,20 +2,32 @@
 % injections
 
 % Load PCs, injections, and reconstruction data
-load('/data/nmangini/SMEE_BBH/SMEE/final-MDC_Q-series.mat')
+load('/Users/jclark/Projects/SMEEBBH/SMEE_repo/SMEE/final-MDC_Q-series.mat')
 QMDC = MDC_final;
-load('/data/nmangini/SMEE_BBH/SMEE/final-MDC_HR-series.mat')
+load('/Users/jclark/Projects/SMEEBBH/SMEE_repo/SMEE/final-MDC_HR-series.mat')
 HRMDC = MDC_final;
-load('/data/nmangini/SMEE_BBH/SMEE/final-MDC_RO3-series.mat')
+load('/Users/jclark/Projects/SMEEBBH/SMEE_repo/SMEE/final-MDC_RO3-series.mat')
 RO3MDC = MDC_final;
-load('/data/nmangini/SMEE_BBH/SMEE/finalRvectorsPC_Q-series.mat')
-QPC = PCs_final*1e-15;
-load('/data/nmangini/SMEE_BBH/SMEE/finalRvectorsPC_HR-series.mat')
-HRPC = PCs_final*1e-15;
-load('/data/nmangini/SMEE_BBH/SMEE/finalRvectorsPC_RO3-series.mat')
-RO3PC = PCs_final*1e-15;
-SMEE_file = dir('*.mat');
-load(SMEE_file.name)
+load('/Users/jclark/Projects/SMEEBBH/SMEE_repo//SMEE/finalRvectorsPC_Q-series.mat')
+QPC = PCs_final*1.1963542944976191e-20;
+load('/Users/jclark/Projects/SMEEBBH/SMEE_repo/SMEE/finalRvectorsPC_HR-series.mat')
+HRPC = PCs_final*1.1963542944976191e-20;
+load('/Users/jclark/Projects/SMEEBBH/SMEE_repo/SMEE/finalRvectorsPC_RO3-series.mat')
+RO3PC = PCs_final*1.1963542944976191e-20;
+
+
+% wf='RO3';
+% switch wf
+%     case 'Q' 
+%         SMEE_file='Q5-Q-seed10smee_output_Q5_modelQ_PCs8_detno1_SNR50_seed10.mat';
+%     case 'HR' 
+%         SMEE_file='Q5-HR-seed10smee_output_Q5_modelHR_PCs8_detno1_SNR50_seed10.mat';
+%     case 'RO3' 
+%         SMEE_file='Q5-RO3-seed10smee_output_Q5_modelRO3_PCs8_detno1_SNR50_seed10';
+% end
+% SMEE_file = dir('*.mat');
+% load(SMEE_file.name)
+% load(SMEE_file)
 
 % Reconstruction
 avgbeta = mean(postbetas);
@@ -33,18 +45,19 @@ for i = 1:length(avgbeta)
 end
 
 % Plotting
-plot(time,recon/max(recon(time>0.5)))
+figure();
+plot(time,recon)%/max(recon(time>0.5)))
 hold on
 if strcmp(catalogue,'Q') == 1
-    plot(time,QMDC(:,wv)/max(QMDC(:,wv)),'r')
+    plot(time,QMDC(:,wv),'r')
 elseif strcmp(catalogue,'HR') == 1
-    plot(time,HRMDC(:,wv)/max(HRMDC(:,wv)),'r')
+    plot(time,HRMDC(:,wv),'r')
 elseif strcmp(catalogue,'RO3') == 1
-    plot(time,RO3MDC(:,wv)/max(RO3MDC(:,wv)),'r')
+    plot(time,RO3MDC(:,wv),'r')
 end
 grid on
 xlabel('t(s)','fontweight','bold')
 ylabel('Strain','fontweight','bold')
 title(strcat('Reconstructed ',catalogue,'Injection with ',model,'Waveform: Bayes = ',num2str(Bayes)),'fontweight','bold')
 legend('Reconstruction','Injection')
-ylim([-1.5,1.5])
+% ylim([-1.5,1.5])
