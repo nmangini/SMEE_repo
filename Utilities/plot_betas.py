@@ -16,18 +16,32 @@ def beta_priors(idx):
     posterior plots (this might be in the output file anyway but this is fairly
     handy)
     """
+#    beta_lims = [
+#            [-6,7],
+#            [-7,7],
+#            [-7,8],
+#            [-9,3],
+#            [-7,6],
+#            [-5,9],
+#            [-5,8],
+#            [-9,5],
+#            [-5,8],
+#            [-5,8],
+#            [-8,3]
+#            ]
+
     beta_lims = [
-            [-6,7],
-            [-7,7],
-            [-7,8],
-            [-9,3],
-            [-7,6],
-            [-5,9],
-            [-5,8],
-            [-9,5],
-            [-5,8],
-            [-5,8],
-            [-8,3]
+            [-50,50],
+            [-50,50],
+            [-50,50],
+            [-50,50],
+            [-50,50],
+            [-50,50],
+            [-50,50],
+            [-50,50],
+            [-50,50],
+            [-50,50],
+            [-50,50]
             ]
 
     return beta_lims[idx]
@@ -45,7 +59,8 @@ if len(matfiles)==0:
 for m,matfile in enumerate(matfiles):
 
     # strip the mat extension so we can conveniently name the figure
-    savename=matfile.replace('.mat','_postbetas.png')
+    #savename=matfile.replace('.mat','_postbetas.png')
+    savename= globpattern + str(m+1) + '_postbetas.png'
 
     #
     # Load file
@@ -56,7 +71,7 @@ for m,matfile in enumerate(matfiles):
     nbetas=np.shape(postbetas)[1]
 
     fig, axes = pl.subplots(nrows=nbetas,ncols=2,figsize=(10,10))
-    fig.tight_layout()
+#    fig.tight_layout()
     for r,row in enumerate(axes):
 
         # Histogram posterior samples
