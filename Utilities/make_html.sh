@@ -7,36 +7,48 @@
 # --- Define some environment variables to contain appropriately named
 # directories etc...
 
-injection_name="Q9" # Injection catalogue and waveform number
-catalogue_name="Q" # Reconstruction catalogue
+injection_name="RO311" # Injection catalogue and waveform number
+catalogue_name="RO3" # Reconstruction catalogue
 filename=${injection_name}-${catalogue_name}
+current_directory=pwd
 logB=
-SNR=
-numactive=
-nits=
+SNR=10
+numactive=50
+nits=10
 
 # HTML string:
+echo """
+<html>
+
+<h1>Injection: ${injection_name}, Catalogue: ${catalogue_name}</h1>
+
+<h1>Input Information</h1>
+<ul>
+<li>SNR = ${SNR}</li>
+<li>Live Points = ${numactive}</li>
+<li>MCMC Samples = ${nits}</li>
+</ul>
+""" > ${filename}.html
+
 for seed in {1..20}
 do
 
     echo """
     <html>
+
+    <h2>Run #${seed}: Analysis Information</h2>
+    <ul>
+    <li>logB = ${logB}</li>
+    <li>Seed = ${seed}</li>
+    </ul>
     
-    <h1>Injection: ${injection_name}, Catalogue: ${catalogue_name}</h1>
-    
-    <h2>Bayes Factor</h2>
-    logB = ${logB}
-    
-    <h2>Beta Posteriors</h2>
+    <h2>Beta Posterior</h2>
     <table>
     <tr>
-    <td><b>Beta 1</b></td>
-    </tr>
-    <tr>
-    <td><img src="${filename}-seed${seed}_postbeta.png"></td>
+    <td><img src="${filename}-seed${seed}_postbetas.png"></td>
     </tr>
     </table>
-    """ > ${filename}.html
+    """ >> ${filename}.html
 
    done
 
