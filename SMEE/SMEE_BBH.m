@@ -137,53 +137,53 @@ load(sprintf('%s/SMEE/finalRvectorsPC_%s-series',SMEEBBH_PREFIX,model));
 
 % sets up the priors and initial chain values, will need to adjust these to
 % include other catalogues. Can use findbetas.m to find max and mins.
-maxbeta(1)=7; % maximum value for first coeffiecient
-minbeta(1)=-6; % minimum value for first coeffiecient
+maxbeta(1)=50; % maximum value for first coeffiecient
+minbeta(1)=-50; % minimum value for first coeffiecient
 betarange(1)=maxbeta(1)-minbeta(1); % range of values
 betaprior(1)=-log(betarange(1)); % log of the first flat prior
 
-maxbeta(2)=7;
-minbeta(2)=-7;
+maxbeta(2)=50;
+minbeta(2)=-50;
 betarange(2)=maxbeta(2)-minbeta(2);
 betaprior(2)=-log(betarange(2));
 
-maxbeta(3)=8;
-minbeta(3)=-7;
+maxbeta(3)=50;
+minbeta(3)=-50;
 betarange(3)=maxbeta(3)-minbeta(3);
 betaprior(3)=-log(betarange(3));
 
-maxbeta(4)=3;
-minbeta(4)=-9;
+maxbeta(4)=50;
+minbeta(4)=-50;
 betarange(4)=maxbeta(4)-minbeta(4);
 betaprior(4)=-log(betarange(4));
 
-maxbeta(5)=6;
-minbeta(5)=-7;
+maxbeta(5)=50;
+minbeta(5)=-50;
 betarange(5)=maxbeta(5)-minbeta(5);
 betaprior(5)=-log(betarange(5));
 
-maxbeta(6)=9;
-minbeta(6)=-5;
+maxbeta(6)=50;
+minbeta(6)=-50;
 betarange(6)=maxbeta(6)-minbeta(6);
 betaprior(6)=-log(betarange(6));
 
-maxbeta(7)=8;
-minbeta(7)=-5;
+maxbeta(7)=50;
+minbeta(7)=-50;
 betarange(7)=maxbeta(7)-minbeta(7);
 betaprior(7)=-log(betarange(7));
 
-maxbeta(8)=5;
-minbeta(8)=-9;
+maxbeta(8)=50;
+minbeta(8)=-50;
 betarange(8)=maxbeta(8)-minbeta(8);
 betaprior(8)=-log(betarange(8));
 
-maxbeta(9)=8;
-minbeta(9)=-5;
+maxbeta(9)=50;
+minbeta(9)=-50;
 betarange(9)=maxbeta(9)-minbeta(9);
 betaprior(9)=-log(betarange(9));
 
-maxbeta(10)=3;
-minbeta(10)=-8;
+maxbeta(10)=50;
+minbeta(10)=-50;
 betarange(10)=maxbeta(10)-minbeta(10);
 betaprior(10)=-log(betarange(10));
 
@@ -670,7 +670,7 @@ Z = Z(1:j-1+numactive);
 Lw = Lw(1:j-2+numactive);
 betas = betas(1:j-2+numactive,:);
 Ts = Ts(1:j-2+numactive);
-Z_end= Z(j-1+numactive);
+Z_end= Z(j-1+numactive); %/(numPCs*100);
 Bayes=Z(j-1+numactive)-sum(evnoise);
 distance= Distance(1:j-2+numactive);
 
@@ -687,7 +687,7 @@ postdis= distance(idx,:);
 
 posterior_params_savefile = ['smee_output_' catalogue num2str(wv) '_model' model '_PCs' num2str(numPCs)...
     '_detno' num2str(detno) '_' typeofscaling strrep(num2str(scaling), '.', 'p') '_seed' num2str(seed)];
-save([resultsdir posterior_params_savefile],'catalogue','wv','model','betas','activebeta','detno',...
+save([resultsdir '/' posterior_params_savefile],'catalogue','wv','model','betas','activebeta','detno',...
     'Ts','seed','distance','Lw', 'evnoise','Z_end','Bayes','SNR','postbetas','postT','postdis','effective_distance', 'numPCs');
 
 % save a simple txt file with a line of output
