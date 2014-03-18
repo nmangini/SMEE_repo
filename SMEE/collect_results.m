@@ -34,17 +34,19 @@ for mod = 1:3
     for dir = 1:length(rseed)
         %load(strcat(ResultsDir,Signal,wv,'-',ModelArray{mod},'-',Identifier,...
         %num2str(rseed(dir)),'/smee_results_6PCs.txt'));
+        %load(strcat(ResultsDir,'/',Signal,wv,'-',ModelArray{mod},'-',Identifier,...
+        %num2str(rseed(dir)),'-snr10-pcs8','/smee_results_8PCs.txt'));
         load(strcat(ResultsDir,'/',Signal,wv,'-',ModelArray{mod},'-',Identifier,...
-        num2str(rseed(dir)),'-snr10-pcs8','/smee_results_8PCs.txt'));
-        Bayes(mod,dir) = smee_results_8PCs(3);
+        num2str(rseed(dir)),'/smee_results.txt'));
+        Bayes(mod,dir) = smee_results(3);
     end
 end
 
 % Plotting
 p1 = plot(rseed,Bayes(1,:),'b');
 hold on
-p2 = plot(rseed(1:9),Bayes(2,1:9),'r');
-plot(rseed(11:20),Bayes(2,11:20),'r');
+p2 = plot(rseed,Bayes(2,:),'r');
+%plot(rseed,Bayes(2,:),'r');
 p3 = plot(rseed,Bayes(3,:),'g');
 grid on
 title(strcat(Signal,'-series Injection'))

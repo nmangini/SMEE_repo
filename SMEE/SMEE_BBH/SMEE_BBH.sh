@@ -11,10 +11,10 @@ jobnum=${2}
 waveformN=${3}
 model=${4}
 
-targetSNR=50
+targetSNR=10
 Fmin=10
 Fmax=100
-NumPCA=8
+NumPCA=1
 
 Ndet=1 # DON"T CHANGE THIS
 doplots=0

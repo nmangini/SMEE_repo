@@ -670,7 +670,7 @@ Z = Z(1:j-1+numactive);
 Lw = Lw(1:j-2+numactive);
 betas = betas(1:j-2+numactive,:);
 Ts = Ts(1:j-2+numactive);
-Z_end= Z(j-1+numactive); %/(numPCs*100);
+Z_end= Z(j-1+numactive);
 Bayes=Z(j-1+numactive)-sum(evnoise);
 distance= Distance(1:j-2+numactive);
 
@@ -691,7 +691,7 @@ save([resultsdir '/' posterior_params_savefile],'catalogue','wv','model','betas'
     'Ts','seed','distance','Lw', 'evnoise','Z_end','Bayes','SNR','postbetas','postT','postdis','effective_distance', 'numPCs');
 
 % save a simple txt file with a line of output
-outFile = sprintf('%s/smee_results_%iPCs.txt', resultsdir,numPCs);
+outFile = sprintf('%s/smee_results.txt', resultsdir);
 fid = fopen(outFile, 'a');
 fprintf(fid, '%i %1.4e %1.4e %1.4e %i \n', wv, evnoise, Bayes, SNR, numPCs);
 fclose(fid);
