@@ -25,6 +25,8 @@ import sys
 __author__ = "James Clark <james.clark@ligo.org>"
 
 import numpy as np
+import scipy.signal as signal
+
 import lal
 import lalsimulation as lalsim
 
@@ -35,13 +37,20 @@ import lalsimulation as lalsim
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # INPUT 
 
-theta=90.0
+theta=0.0
 phi=0.0
-Mtot=250.0
 catalogue_name='RO3-series'
+
+Mtot=250.0
+Dist=1 # Gpc
+fs=16384
 
 # Dictionary with the maximum waveform data lengths
 maxlengths={'Q-series':10959, 'HR-series':31238, 'RO3-series':16493}
+
+# Dictionary of NR sample rates. XXX Should probably get this from the data,
+# really
+NR_deltaT={'Q-series':0.155, 'HR-series':0.08, 'RO3-series':2./15}
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Construct Waveforms
@@ -129,6 +138,10 @@ for w in range(len(waveforms)):
 # 
 # Let's retain 1.0 seconds of a 250 Msun inspiral, walking backwards from the
 # peak time
+#
+# This is also a convenient place to apply the mass scaling and resample the PCs
+# to 16384 Hz.  XXX: We probably want to do this elsewhere (e.g., in the
+# evidence calculation itself) in future.
 
 print 'truncating and tapering'
 
@@ -138,26 +151,51 @@ inspiral_len = np.ceil((inspiral_time / (Mtot*lal.LAL_MTSUN_SI)) /
 turn_on_idx = align_to_idx - inspiral_len
 catalogue[0:turn_on_idx] = 0.0
 
-# Taper
+# ---------- MASS DEPENDENT CALCULATIONS -----------
+# Determine current sample rate.  XXX: This assumes a mass scale
+NR_deltaT = Mtot * lal.LAL_MTSUN_SI * NR_deltaT[catalogue_name]
+Mscale = Mtot * lal.LAL_MRSUN_SI / (Dist * 1e9 * lal.LAL_PC_SI)
+
+# Resampled catalogue
+resamp_catalogue = np.zeros(shape=(wflen*NR_deltaT*fs,len(waveforms)))
+
+import pmns_utils
+# Resample and taper
 for w in range(len(waveforms)):
 
-        # Tapering is done on lal TimeSeries objects
+        # --- Tapering is done on lal TimeSeries objects
         hoft = lal.CreateREAL8TimeSeries('hoft', lal.LIGOTimeGPS(), 0.0,
-                1.0, lal.lalStrainUnit, len(catalogue[:,w]))
-
+                NR_deltaT, lal.lalStrainUnit, maxlengths[catalogue_name])
         hoft.data.data = catalogue[:,w]
-
         lalsim.SimInspiralREAL8WaveTaper(hoft.data,
                 lalsim.LAL_SIM_INSPIRAL_TAPER_START)
 
-        # Repopulate catalogue with tapered data
-        catalogue[:,w] = hoft.data.data
+        # --- Resampling (Note that LAL only handles downsampling by a factor of 2)
+        # XXX apply mass scaling here.
+        resampled_wf = Mscale*signal.resample(hoft.data.data, wflen*NR_deltaT * fs)
+
+        # --- Compute SNR and rescale to SNR=1
+        hoft = lal.CreateREAL8TimeSeries('hoft', lal.LIGOTimeGPS(), 0.0,
+                1/float(fs), lal.lalStrainUnit, len(resampled_wf))
+        hoft.data.data = resampled_wf
+        rho, hrss, _, _, _ = pmns_utils.optimal_snr(hoft,freqmin=10,freqmax=100)
+        resampled_wf *= 1.0/rho
+        #resampled_wf *= 1.0/hrss
+
+        # Populate catalogue with scaled, resampled, tapered data. 
+        resamp_catalogue[:,w] = resampled_wf
+
+# Eliminate memory-intensive and unncessary data
+del catalogue, hoft, hplus, hcross
 
 # Finally, remove leading zeros
+# We'll just remove everything that's <0.1% of the peak amplitude.  One of the
+# earlier steps, probably tapering, means things are formally non-zero
 nonzero_idx = np.zeros(len(waveforms))
 for w in range(len(waveforms)):
-    nonzero_idx[w] = np.argwhere(abs(catalogue[:,w])>0)[0]
-catalogue = catalogue[min(nonzero_idx):,:]
+    nonzero_idx[w] = \
+            np.argwhere(abs(resamp_catalogue[:,w])>0.01*max(abs(resamp_catalogue[:,w])))[0]
+resamp_catalogue = resamp_catalogue[min(nonzero_idx):,:]
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # PCA
@@ -171,7 +209,7 @@ catalogue = catalogue[min(nonzero_idx):,:]
 print 'Performing PCA'
 
 # --- Make catalogue a matrix for matrix arithmetic
-H = np.matrix(catalogue)
+H = np.matrix(resamp_catalogue)
 
 # --- 1) Compute catalogue covariance
 C = H.T * H / np.shape(H)[0]
